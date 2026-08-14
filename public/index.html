@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Eleições 2026 - Alinhamento Político</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+            result: { esquerda: '#ef4444', centro: '#eab308', direita: '#3b82f6' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-up { animation: slideUp 0.6s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .progress-bar { transition: width 0.5s ease-in-out; }
+    .option-card { transition: all 0.3s ease; }
+    .option-card:hover { transform: translateY(-2px); }
+    .option-card.selected { ring: 2px; }
+    .spectrum-bar { background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6); }
+    .glass { backdrop-filter: blur(10px); }
+    .theme-toggle { transition: transform 0.3s ease; }
+    .theme-toggle:hover { transform: rotate(30deg); }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+
+  <!-- Theme Toggle -->
+  <button id="themeToggle" class="theme-toggle fixed top-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700">
+    <span id="themeIcon" class="text-xl">🌙</span>
+  </button>
+
+  <!-- Header -->
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 dark:from-gray-800 dark:via-gray-900 dark:to-black"></div>
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-4xl mx-auto px-4 py-16 text-center text-white">
+      <div class="inline-flex items-center gap-2 bg-white/10 glass rounded-full px-4 py-2 mb-6">
+        <span class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></span>
+        <span class="text-sm font-medium">Eleições 2026</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+        Quiz de Alinhamento<br>
+        <span class="text-blue-200">Político</span>
+      </h1>
+      <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
+        Descubra seu perfil de alinhamento ideológico para as eleições presidenciais de 2026
+      </p>
+      <div class="flex flex-wrap justify-center gap-4 text-sm">
+        <div class="flex items-center gap-2 bg-white/10 glass rounded-lg px-4 py-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="totalQuestions"></span> Perguntas
+        </div>
+        <div class="flex items-center gap-2 bg-white/10 glass rounded-lg px-4 py-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          ~5 minutos
+        </div>
+        <div class="flex items-center gap-2 bg-white/10 glass rounded-lg px-4 py-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          100% Anônimo
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="fade-in">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-6 border border-gray-100 dark:border-gray-700">
+        <h2 class="text-2xl font-bold mb-4">Como funciona?</h2>
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="text-center p-4">
+            <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            </div>
+            <h3 class="font-semibold mb-1">Responda</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400"><span class="totalQuestions"></span> perguntas sorteadas de um banco de 20 temas políticos</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-14 h-14 bg-purple-100 dark:bg-purple-900/50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-7 h-7 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            </div>
+            <h3 class="font-semibold mb-1">Analise</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Seu perfil será calculado automaticamente</p>
+          </div>
+          <div class="text-center p-4">
+            <div class="w-14 h-14 bg-green-100 dark:bg-green-900/50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <svg class="w-7 h-7 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            </div>
+            <h3 class="font-semibold mb-1">Resultado</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Veja seu espectro político completo</p>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4 mb-6">
+          <div class="flex gap-3">
+            <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+              <p class="font-medium text-yellow-800 dark:text-yellow-200">Aviso Importante</p>
+              <p class="text-sm text-yellow-700 dark:text-yellow-300">Este quiz é baseado em opiniões políticas e posicionamentos ideológicos. As respostas são subjetivas e servem apenas como uma ferramenta de reflexão sobre seu alinhamento político.</p>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+          Começar o Quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="hidden">
+      <!-- Progress Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Pergunta <span id="currentQ">1</span> de <span class="totalQuestions"></span></span>
+          <span id="progressPercent" class="text-sm font-semibold text-primary-600 dark:text-primary-400">0%</span>
+        </div>
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div id="progressBar" class="progress-bar bg-gradient-to-r from-primary-500 to-primary-600 h-2.5 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <div id="questionCard" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 slide-up">
+        <div class="flex items-start gap-3 mb-6">
+          <span id="questionNumber" class="flex-shrink-0 w-10 h-10 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-xl flex items-center justify-center font-bold text-lg">1</span>
+          <h2 id="questionText" class="text-lg md:text-xl font-semibold leading-relaxed"></h2>
+        </div>
+
+        <div id="optionsContainer" class="space-y-3"></div>
+
+        <div class="flex justify-between mt-8">
+          <button id="prevBtn" onclick="prevQuestion()" class="hidden px-6 py-3 rounded-xl font-medium border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            ← Anterior
+          </button>
+          <div></div>
+          <button id="nextBtn" onclick="nextQuestion()" class="px-6 py-3 rounded-xl font-medium bg-primary-600 hover:bg-primary-700 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Próxima →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="hidden fade-in">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100 dark:border-gray-700 mb-6">
+        <div class="text-center mb-6">
+          <div class="w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <p class="text-gray-500 dark:text-gray-400 text-sm mb-2">Seu alinhamento político é</p>
+          <h2 id="resultTitle" class="text-3xl md:text-4xl font-extrabold mb-2"></h2>
+          <div class="flex items-center justify-center gap-3">
+            <span id="resultPercentage" class="text-5xl font-extrabold text-primary-600 dark:text-primary-400"></span>
+            <span class="text-gray-500 dark:text-gray-400 font-medium">de acordo</span>
+          </div>
+        </div>
+
+        <!-- Political Spectrum Bar -->
+        <div class="mb-6">
+          <div class="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+            <span>Esquerda</span>
+            <span>Centro</span>
+            <span>Direita</span>
+          </div>
+          <div class="spectrum-bar h-4 rounded-full relative">
+            <div id="spectrumMarker" class="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-900 dark:border-white rounded-full shadow-lg transition-all duration-1000" style="left: 50%"></div>
+          </div>
+        </div>
+
+        <!-- Candidatos Compatíveis -->
+        <div class="mb-6">
+          <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Candidatos mais compatíveis com você
+          </h3>
+
+          <!-- Presidente -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded flex items-center justify-center text-xs font-bold">PR</span>
+              Presidente
+            </h4>
+            <div id="matchingPresidente" class="space-y-2"></div>
+          </div>
+
+          <!-- Seletor de Estado -->
+          <div class="mb-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+            <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-2">Selecione seu estado para ver candidatos locais:</label>
+            <select id="resultEstadoSelect" onchange="renderLocalCandidates()" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none">
+              <option value="">Selecione o estado</option>
+            </select>
+          </div>
+
+          <!-- Governador -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 rounded flex items-center justify-center text-xs font-bold">GO</span>
+              Governador
+            </h4>
+            <div id="matchingGovernador" class="space-y-2">
+              <p class="text-xs text-gray-400 italic">Selecione o estado acima</p>
+            </div>
+          </div>
+
+          <!-- Senador -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300 rounded flex items-center justify-center text-xs font-bold">SE</span>
+              Senador
+            </h4>
+            <div id="matchingSenador" class="space-y-2">
+              <p class="text-xs text-gray-400 italic">Selecione o estado acima</p>
+            </div>
+          </div>
+
+          <!-- Deputado Federal -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded flex items-center justify-center text-xs font-bold">DF</span>
+              Deputado Federal
+            </h4>
+            <div id="matchingDepFederal" class="space-y-2">
+              <p class="text-xs text-gray-400 italic">Selecione o estado acima</p>
+            </div>
+          </div>
+
+          <!-- Deputado Estadual -->
+          <div class="mb-4">
+            <h4 class="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span class="w-6 h-6 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300 rounded flex items-center justify-center text-xs font-bold">DE</span>
+              Deputado Estadual
+            </h4>
+            <div id="matchingDepEstadual" class="space-y-2">
+              <p class="text-xs text-gray-400 italic">Selecione o estado acima</p>
+            </div>
+          </div>
+
+          <div class="text-center mt-3">
+            <a href="candidatos.html" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline inline-flex items-center gap-1">
+              Ver lista completa de candidatos
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Ver Mais Link -->
+        <div class="text-center mb-6">
+          <button onclick="toggleDetails()" class="text-primary-600 dark:text-primary-400 font-medium hover:underline inline-flex items-center gap-1">
+            <span id="detailsToggleText">Ver detalhes do resultado</span>
+            <svg id="detailsArrow" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+        </div>
+
+        <!-- Hidden Details Section -->
+        <div id="detailsSection" class="hidden">
+          <!-- Score Breakdown -->
+          <div class="grid grid-cols-3 gap-3 mb-6">
+            <div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-3 text-center border border-red-100 dark:border-red-800/30">
+              <div id="scoreLeft" class="text-2xl font-bold text-red-600 dark:text-red-400">0</div>
+              <div class="text-xs text-red-700 dark:text-red-300 font-medium">Esquerda</div>
+            </div>
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-3 text-center border border-yellow-100 dark:border-yellow-800/30">
+              <div id="scoreCenter" class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">0</div>
+              <div class="text-xs text-yellow-700 dark:text-yellow-300 font-medium">Centro</div>
+            </div>
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 text-center border border-blue-100 dark:border-blue-800/30">
+              <div id="scoreRight" class="text-2xl font-bold text-blue-600 dark:text-blue-400">0</div>
+              <div class="text-xs text-blue-700 dark:text-blue-300 font-medium">Direita</div>
+            </div>
+          </div>
+
+          <!-- Detailed Analysis -->
+          <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-5 mb-6">
+            <h3 class="font-semibold mb-3">Análise por Tema</h3>
+            <div id="analysisContent" class="space-y-2 text-sm text-gray-600 dark:text-gray-300"></div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="restartQuiz()" class="flex-1 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold py-3 px-6 rounded-xl transition-all">
+            Refazer Quiz
+          </button>
+          <button onclick="shareResult()" class="flex-1 border-2 border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 font-semibold py-3 px-6 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all">
+            Compartilhar
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-sm text-gray-400 dark:text-gray-500">
+    <p>Quiz de Alinhamento Político — Eleições 2026</p>
+    <p class="mt-1">Ferramenta de reflexão. Suas respostas são anônimas e não são armazenadas.</p>
+    <p class="mt-3"><a href="candidatos.html" class="text-primary-600 dark:text-primary-400 hover:underline font-medium">Ver lista completa de candidatos 2026 →</a></p>
+  </footer>
+
+  <script src="js/partidos_logos.js"></script>
+  <script src="js/candidatos.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>

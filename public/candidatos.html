@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidatos 2026 - Eleições</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a8a' },
+            esquerda: '#ef4444', centro: '#eab308', direita: '#3b82f6'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .fade-in { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .card-hover { transition: all 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+    .tendencia-bar { height: 6px; border-radius: 9999px; }
+    .spectrum { background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #3b82f6); }
+    .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; font-weight: 600; }
+    .glass { backdrop-filter: blur(10px); }
+    .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+
+  <!-- Header -->
+  <header class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 dark:from-gray-800 dark:via-gray-900 dark:to-black"></div>
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-300 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 py-12 text-center text-white">
+      <a href="index.html" class="inline-flex items-center gap-2 text-blue-200 hover:text-white mb-4 text-sm transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Voltar ao Quiz
+      </a>
+      <h1 class="text-3xl md:text-5xl font-extrabold mb-3 leading-tight">
+        Candidatos <span class="text-blue-200">2026</span>
+      </h1>
+      <p class="text-lg text-blue-100 max-w-2xl mx-auto">
+        Confira todos os candidatos, tendências políticas e planos de governo
+      </p>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <div class="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex overflow-x-auto gap-1" id="tabsContainer">
+        <button onclick="showTab('presidente')" class="tab-btn tab-active whitespace-nowrap px-4 py-3 text-sm font-medium transition" data-tab="presidente">
+          Presidente <span id="count-presidente" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-primary-200 dark:bg-primary-800 text-primary-700 dark:text-primary-300"></span>
+        </button>
+        <button onclick="showTab('governador')" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition" data-tab="governador">
+          Governador <span id="count-governador" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"></span>
+        </button>
+        <button onclick="showTab('senador')" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition" data-tab="senador">
+          Senador <span id="count-senador" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"></span>
+        </button>
+        <button onclick="showTab('deputado-federal')" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition" data-tab="deputado-federal">
+          Dep. Federal <span id="count-deputado-federal" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"></span>
+        </button>
+        <button onclick="showTab('deputado-estadual')" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition" data-tab="deputado-estadual">
+          Dep. Estadual <span id="count-deputado-estadual" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"></span>
+        </button>
+        <button onclick="showTab('partidos')" class="tab-btn whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition" data-tab="partidos">
+          Partidos <span id="count-partidos" class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtro por Estado (oculto para presidente) -->
+  <div id="filtroEstado" class="hidden max-w-7xl mx-auto px-4 py-4">
+    <div class="flex flex-wrap items-center gap-3">
+      <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Filtrar por estado:</label>
+      <select id="estadoSelect" onchange="filtrarPorEstado()" class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none">
+        <option value="todos">Todos os estados</option>
+      </select>
+      <div id="filtroAlinhamento" class="hidden flex-wrap gap-2 ml-2">
+        <button onclick="filtrarPorAlinhamento('todos')" class="alinhamento-btn px-3 py-1 rounded-full text-xs font-medium bg-gray-200 dark:bg-gray-600 transition" data-alinhamento="todos">Todos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <main class="max-w-7xl mx-auto px-4 py-6">
+
+    <!-- Seção Presidente -->
+    <section id="section-presidente" class="fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Candidatos à Presidência</h2>
+          <span id="section-count-presidente" class="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium"></span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Primeiro turno: 4 de outubro de 2026</p>
+      </div>
+        <div class="space-y-3" id="pesquisasPresidente"></div>
+
+      <div class="grid gap-4" id="listaPresidente"></div>
+    </section>
+
+    <!-- Seção Governador -->
+    <section id="section-governador" class="hidden fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Candidatos a Governador</h2>
+          <span id="section-count-governador" class="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium hidden"></span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Selecione um estado para ver os candidatos</p>
+      </div>
+      <div class="grid gap-4" id="listaGovernadores"></div>
+      <div id="semDadosGovernador" class="hidden text-center py-12 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        <p>Selecione um estado acima</p>
+      </div>
+    </section>
+
+    <!-- Seção Senador -->
+    <section id="section-senador" class="hidden fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Candidatos ao Senado</h2>
+          <span id="section-count-senador" class="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium hidden"></span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">2 vagas por estado</p>
+      </div>
+      <div class="grid gap-4" id="listaSenadores"></div>
+      <div id="semDadosSenador" class="hidden text-center py-12 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        <p>Selecione um estado acima</p>
+      </div>
+    </section>
+
+    <!-- Seção Deputado Federal -->
+    <section id="section-deputado-federal" class="hidden fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Candidatos a Deputado Federal</h2>
+          <span id="section-count-deputado-federal" class="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium hidden"></span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Principais nomes por estado</p>
+      </div>
+      <div class="grid gap-4" id="listaDepFederal"></div>
+      <div id="semDadosDepFederal" class="hidden text-center py-12 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        <p>Selecione um estado acima</p>
+      </div>
+    </section>
+
+    <!-- Seção Deputado Estadual -->
+    <section id="section-deputado-estadual" class="hidden fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Candidatos a Deputado Estadual</h2>
+          <span id="section-count-deputado-estadual" class="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full text-xs font-medium hidden"></span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Principais nomes por estado</p>
+      </div>
+      <div class="grid gap-4" id="listaDepEstadual"></div>
+      <div id="semDadosDepEstadual" class="hidden text-center py-12 text-gray-400">
+        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        <p>Selecione um estado acima</p>
+      </div>
+    </section>
+
+    <!-- Seção Partidos -->
+    <section id="section-partidos" class="hidden fade-in">
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold">Partidos Participantes</h2>
+          <span class="px-2 py-0.5 bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium">2026</span>
+        </div>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Todos os partidos com candidatos registrados nas eleições de 2026</p>
+      </div>
+      <div id="ordenacaoPartidos" class="grid grid-cols-1"></div>
+      <div id="listaPartidos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal Plano de Governo -->
+  <div id="planoModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" onclick="fecharModal()"></div>
+    <div class="absolute inset-4 md:inset-12 lg:inset-20 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div>
+          <h3 id="modalNome" class="text-xl font-bold"></h3>
+          <p id="modalPartido" class="text-sm text-gray-500 dark:text-gray-400"></p>
+        </div>
+        <button onclick="fecharModal()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4 md:p-6">
+        <div id="modalConteudo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-sm text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 mt-8">
+    <p>Dados retirados do <a href="https://dadosabertos.tse.jus.br/" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Portal de Dados Abertos do TSE</a> em agosto de 2026</p>
+    <p class="mt-2 text-lg font-bold">Vamos combater as Fake News</p>
+    <p>
+        <a href="https://www12.senado.leg.br/verifica/eleicoes" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">
+            Senado Verifica
+        </a> • 
+        <a href="https://www.justicaeleitoral.jus.br/fato-ou-boato/" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">
+            Fato ou Boato
+        </a> • 
+        <a href="https://www.tse.jus.br/eleicoes/sistema-de-alertas" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">
+            Sistema de Alertas de Desinformação Eleitoral - SIADE
+        </a> • 
+        <a href="https://www.jusbrasil.com.br/noticias/eleicoes-2026-como-identificar-informacoes-falsas-sobre-o-processo-eleitoral/6717379197" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">
+            Como identificar informações falsas
+        </a>
+    </p>
+  </footer>
+
+  <script src="js/partidos_logos.js"></script>
+  <script src="js/candidatos.js"></script>
+  <script>
+    let tabAtual = 'presidente';
+    let estadoAtual = 'todos';
+    let alinhamentoAtual = 'todos';
+    let sortPresidente = 'nome';
+    let sortGovernador = 'nome';
+    let sortSenador = 'nome';
+    let sortDepFederal = 'nome';
+    let sortDepEstadual = 'nome';
+
+    // Popular select de estados
+    function initEstados() {
+      const select = document.getElementById('estadoSelect');
+      ESTADOS.forEach(uf => {
+        const opt = document.createElement('option');
+        opt.value = uf;
+        opt.textContent = `${uf} - ${NOMES_ESTADOS[uf]}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function atualizarContagens() {
+      function countAll(obj) {
+        if (!obj) return 0;
+        return Object.values(obj).reduce((sum, arr) => sum + arr.length, 0);
+      }
+      const counts = {
+        presidente: typeof CANDIDATOS_PRESIDENTE !== 'undefined' ? CANDIDATOS_PRESIDENTE.length : 0,
+        governador: typeof GOVERNADORES_POR_ESTADO !== 'undefined' ? countAll(GOVERNADORES_POR_ESTADO) : 0,
+        senador: typeof SENADORES_POR_ESTADO !== 'undefined' ? countAll(SENADORES_POR_ESTADO) : 0,
+        'deputado-federal': typeof DEPUTADOS_FEDERAIS_DESTAQUE !== 'undefined' ? countAll(DEPUTADOS_FEDERAIS_DESTAQUE) : 0,
+        'deputado-estadual': typeof DEPUTADOS_ESTADUAIS_DESTAQUE !== 'undefined' ? countAll(DEPUTADOS_ESTADUAIS_DESTAQUE) : 0,
+        partidos: typeof PARTIDOS_LOGOS !== 'undefined' ? Object.keys(PARTIDOS_LOGOS).length : 0
+      };
+
+      Object.keys(counts).forEach(key => {
+        const tabCount = document.getElementById(`count-${key}`);
+        if (tabCount) {
+          tabCount.textContent = counts[key] > 0 ? counts[key] : '';
+        }
+      });
+
+      const presidentCount = document.getElementById('section-count-presidente');
+      if (presidentCount) {
+        presidentCount.textContent = `${counts.presidente} candidatos`;
+        presidentCount.classList.remove('hidden');
+      }
+
+      const governadorCount = document.getElementById('section-count-governador');
+      if (governadorCount) {
+        const govStateCount = typeof GOVERNADORES_POR_ESTADO !== 'undefined' && GOVERNADORES_POR_ESTADO[estadoAtual] ? GOVERNADORES_POR_ESTADO[estadoAtual].length : 0;
+        if (estadoAtual !== 'todos') {
+          governadorCount.textContent = `${govStateCount} candidatos em ${estadoAtual}`;
+        } else {
+          governadorCount.textContent = `${counts.governador} total`;
+        }
+        governadorCount.classList.remove('hidden');
+      }
+
+      const senadorCount = document.getElementById('section-count-senador');
+      if (senadorCount) {
+        const senStateCount = typeof SENADORES_POR_ESTADO !== 'undefined' && SENADORES_POR_ESTADO[estadoAtual] ? SENADORES_POR_ESTADO[estadoAtual].length : 0;
+        if (estadoAtual !== 'todos') {
+          senadorCount.textContent = `${senStateCount} candidatos em ${estadoAtual}`;
+        } else {
+          senadorCount.textContent = `${counts.senador} total`;
+        }
+        senadorCount.classList.remove('hidden');
+      }
+
+      const dfCount = document.getElementById('section-count-deputado-federal');
+      if (dfCount) {
+        const dfStateCount = typeof DEPUTADOS_FEDERAIS_DESTAQUE !== 'undefined' && DEPUTADOS_FEDERAIS_DESTAQUE[estadoAtual] ? DEPUTADOS_FEDERAIS_DESTAQUE[estadoAtual].length : 0;
+        if (estadoAtual !== 'todos') {
+          dfCount.textContent = `${dfStateCount} candidatos em ${estadoAtual}`;
+        } else {
+          dfCount.textContent = `${counts['deputado-federal']} total`;
+        }
+        dfCount.classList.remove('hidden');
+      }
+
+      const deCount = document.getElementById('section-count-deputado-estadual');
+      if (deCount) {
+        const deStateCount = typeof DEPUTADOS_ESTADUAIS_DESTAQUE !== 'undefined' && DEPUTADOS_ESTADUAIS_DESTAQUE[estadoAtual] ? DEPUTADOS_ESTADUAIS_DESTAQUE[estadoAtual].length : 0;
+        if (estadoAtual !== 'todos') {
+          deCount.textContent = `${deStateCount} candidatos em ${estadoAtual}`;
+        } else {
+          deCount.textContent = `${counts['deputado-estadual']} total`;
+        }
+        deCount.classList.remove('hidden');
+      }
+
+      const partidosCount = document.getElementById('count-partidos');
+      if (partidosCount) {
+        partidosCount.textContent = `${counts.partidos} partidos`;
+      }
+    }
+
+    function showTab(tab) {
+      tabAtual = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-gray-500', 'dark:text-gray-400');
+      });
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active');
+      document.querySelector(`[data-tab="${tab}"]`).classList.remove('text-gray-500', 'dark:text-gray-400');
+
+      ['presidente','governador','senador','deputado-federal','deputado-estadual','partidos'].forEach(s => {
+        document.getElementById(`section-${s}`).classList.add('hidden');
+      });
+      document.getElementById(`section-${tab}`).classList.remove('hidden');
+
+      const filtroEstado = document.getElementById('filtroEstado');
+      const filtroAlinhamento = document.getElementById('filtroAlinhamento');
+      if (tab === 'presidente' || tab === 'partidos') {
+        filtroEstado.classList.add('hidden');
+      } else {
+        filtroEstado.classList.remove('hidden');
+        filtroAlinhamento.classList.remove('hidden');
+      }
+
+      if (tab !== 'presidente' && tab !== 'partidos') {
+        filtrarPorEstado();
+      }
+      if (tab === 'partidos') renderPartidos();
+      atualizarContagens();
+    }
+
+    function filtrarPorEstado() {
+      estadoAtual = document.getElementById('estadoSelect').value;
+      alinhamentoAtual = 'todos';
+      document.querySelectorAll('.alinhamento-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-primary-500');
+        if (b.dataset.alinhamento === 'todos') b.classList.add('ring-2', 'ring-primary-500');
+      });
+
+      if (tabAtual === 'governador') renderGovernadores();
+      if (tabAtual === 'senador') renderSenadores();
+      if (tabAtual === 'deputado-federal') renderDepFederal();
+      if (tabAtual === 'deputado-estadual') renderDepEstadual();
+    }
+
+    function filtrarPorAlinhamento(alinhamento) {
+      alinhamentoAtual = alinhamento;
+      document.querySelectorAll('.alinhamento-btn').forEach(b => {
+        b.classList.remove('ring-2', 'ring-primary-500');
+        if (b.dataset.alinhamento === alinhamento) b.classList.add('ring-2', 'ring-primary-500');
+      });
+      if (tabAtual === 'governador') renderGovernadores();
+      if (tabAtual === 'senador') renderSenadores();
+      if (tabAtual === 'deputado-federal') renderDepFederal();
+      if (tabAtual === 'deputado-estadual') renderDepEstadual();
+    }
+
+    // ============ PRESIDENTE ============
+    function renderPresidente() {
+      // Pesquisas
+      const pesqHtml = CANDIDATOS_PRESIDENTE.filter(c => c.pesquisas && c.pesquisas !== '<1% (1º turno)')
+        .sort((a,b) => {
+          const getNum = s => parseFloat(s.match(/[\d]+/)?.[0] || '0');
+          return getNum(b.pesquisas) - getNum(a.pesquisas);
+        })
+        .map(c => `
+          <div class="flex items-center gap-3">
+            <span class="w-40 md:w-56 text-sm font-medium truncate">${c.nome}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full" style="background:${c.tendenciaCor}20;color:${c.tendenciaCor}">${c.partido}</span>
+            <div class="flex-1 h-6 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div class="h-full rounded-full flex items-center justify-end pr-2 text-xs font-bold text-white" style="width:${Math.max(parseInt(c.pesquisas)||5, 8)}%;background:${c.tendenciaCor}">${c.pesquisas.split(' ')[0]}</div>
+            </div>
+          </div>
+        `).join('');
+      document.getElementById('pesquisasPresidente').innerHTML = pesqHtml;
+
+      // Ordenacao
+      let sorted = [...CANDIDATOS_PRESIDENTE];
+      if (sortPresidente === 'nome') sorted.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (sortPresidente === 'numero') sorted.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else sorted.sort((a, b) => a.partido.localeCompare(b.partido));
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar:</span>
+          <button onclick="sortPresidente='nome';renderPresidente()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortPresidente==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="sortPresidente='numero';renderPresidente()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortPresidente==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+          <button onclick="sortPresidente='partido';renderPresidente()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortPresidente==='partido' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Partido</button>
+        </div>
+      `;
+
+      // Cards
+      const html = sorted.map(c => {
+        const cor = c.tendenciaCor || '#888';
+        const fotoUrl = c.foto || '';
+        const fotoHtml = fotoUrl
+          ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-20 h-20 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-20 h-20 rounded-full items-center justify-center text-white font-bold text-xl border-3 flex-shrink-0 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`
+          : `<div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-xl border-3 flex-shrink-0" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
+        const numeroHtml = c.numero ? `<span class="text-sm font-mono px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/BR/BR/20322002026/${c.sqCandidato}/2026/BR" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const viceFotoUrl = c.viceFoto || '';
+        const viceFotoHtml = viceFotoUrl
+          ? `<img src="${viceFotoUrl}" alt="${c.vice}" class="w-10 h-10 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${c.tendenciaCor}" onerror="this.style.display='none'">`
+          : '';
+        const viceNameHtml = c.vice ? `<div class="flex items-center gap-2 mt-2">${viceFotoHtml}<p class="text-sm text-gray-500 dark:text-gray-400">Vice: ${c.vice}</p></div>` : '';
+        const partidoLogo = getPartidoLogo(c.partido);
+        const partidoNome = getPartidoNome(c.partido);
+        const partidoHtml = partidoLogo
+          ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:none">${partidoNome}</span></div>`
+          : '';
+        return `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-700 card-hover">
+          <div class="flex flex-col md:flex-row md:items-start gap-4">
+            <div class="flex items-start gap-4 flex-1">
+              ${fotoHtml}
+              <div class="flex-1 min-w-0">
+                ${partidoHtml}
+                <div class="flex items-center gap-2 flex-wrap mb-2">
+                  <h3 class="text-xl font-bold mb-2" style="line-height: 0.9;">${c.nomeUrna}<br>
+                    <small class="font-normal text-xs text-gray-500 dark:text-gray-400">${c.nome}</small>
+                  </h3>
+                  ${numeroHtml}
+                </div>
+                ${viceNameHtml}
+                ${c.destaque ? `<p class="text-sm text-gray-600 dark:text-gray-300 mb-3">${c.destaque}</p>` : ''}
+                ${c.resumo ? `<p class="text-xs bg-gray-50 dark:bg-gray-700/50 rounded-lg p-2 mb-3 text-gray-600 dark:text-gray-300"><strong>Resumo:</strong> ${c.resumo}</p>` : ''}
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-xs text-gray-500 dark:text-gray-400">Espectro:</span>
+                  <div class="spectrum flex-1 h-2 rounded-full relative max-w-xs">
+                    <div class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 rounded-full shadow" style="left:${c.tendenciaPct}%;border-color:${c.tendenciaCor}"></div>
+                  </div>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${c.tendenciaCor}20;color:${c.tendenciaCor}">${c.tendencia}</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-2 items-center">
+                  ${c.planoGoverno ? `
+                    <button onclick="abrirPlano('${c.nome.replace(/'/g,"\\'")}','${c.partido}','${c.tendencia}','${c.tendenciaCor.replace('#','')}',\`${c.planoGoverno.replace(/`/g,"\\`")}\`, '${c.linkPlano || ''}')" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline inline-flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                      Ver Plano
+                    </button>
+                  ` : ''}
+                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                  ${c.coligacao ? `<div class="w-full mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('listaPresidente').innerHTML = botoesOrdenacao + html;
+      atualizarContagens();
+    }
+
+    // ============ GOVERNADORES ============
+    function renderGovernadores() {
+      if (estadoAtual === 'todos') {
+        document.getElementById('listaGovernadores').innerHTML = '';
+        document.getElementById('semDadosGovernador').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('semDadosGovernador').classList.add('hidden');
+
+      let candidatos = GOVERNADORES_POR_ESTADO[estadoAtual] || [];
+      if (alinhamentoAtual !== 'todos') {
+        candidatos = candidatos.filter(c => {
+          if (alinhamentoAtual === 'Lula') return c.aliadoLula;
+          return !c.aliadoLula;
+        });
+      }
+
+      if (candidatos.length === 0) {
+        document.getElementById('listaGovernadores').innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum candidato encontrado para este filtro</p>';
+        return;
+      }
+
+      if (sortGovernador === 'nome') candidatos.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (sortGovernador === 'numero') candidatos.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else candidatos.sort((a, b) => a.partido.localeCompare(b.partido));
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar:</span>
+          <button onclick="sortGovernador='nome';renderGovernadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortGovernador==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="sortGovernador='numero';renderGovernadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortGovernador==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+          <button onclick="sortGovernador='partido';renderGovernadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortGovernador==='partido' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Partido</button>
+        </div>
+      `;
+
+      const html = candidatos.map(c => {
+        const cor = c.aliadoLula ? '#3b82f6' : '#ef4444';
+        const label = c.aliadoLula ? 'Palanque de Lula' : (c.tendencia.includes('Direita') ? 'Campo Flávio' : 'Independente');
+        const fotoUrl = c.foto || '';
+        const fotoHtml = fotoUrl
+          ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-14 h-14 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-14 h-14 rounded-full items-center justify-center text-white font-bold text-sm border-2 flex-shrink-0 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`
+          : `<div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${cor}">${c.partido.substring(0,4)}</div>`;
+        const numeroHtml = c.numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const viceFotoUrl = c.viceFoto || '';
+        const viceFotoHtml = viceFotoUrl
+          ? `<img src="${viceFotoUrl}" alt="${c.vice}" class="w-8 h-8 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none'">`
+          : '';
+        const viceHtml = c.vice ? `<div class="flex items-center gap-2 mt-2">${viceFotoHtml}<p class="text-xs text-gray-500 dark:text-gray-400"><span class="font-medium">Vice:</span> ${c.vice}</p></div>` : '';
+        const tendenciaPct = c.tendenciaPct || 50;
+        const corTendencia = tendenciaPct < 30 ? '#ef4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
+        const partidoLogo = getPartidoLogo(c.partido);
+        const partidoNome = getPartidoNome(c.partido);
+        const partidoHtml = partidoLogo
+          ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:none">${partidoNome}</span></div>`
+          : '';
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-5 border border-gray-100 dark:border-gray-700 card-hover">
+            <div class="flex flex-col md:flex-row md:items-start gap-4">
+              <div class="flex items-start gap-3 flex-1">
+                ${fotoHtml}
+                <div class="flex-1 min-w-0">
+                  ${partidoHtml}
+                  <div class="flex items-center gap-2 flex-wrap mb-1">
+                    <h3 class="text-xl font-bold mb-2" style="line-height: 0.9;">${c.nomeUrna}<br>
+                    <small class="font-normal text-xs text-gray-500 dark:text-gray-400">${c.nome}</small>
+                  </h3>
+                    ${numeroHtml}
+                  </div>
+                  <div class="flex items-center gap-1 flex-wrap mb-2">
+                    
+                  </div>
+                  ${viceHtml}
+                  ${c.resumo ? `<p class="text-sm bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-3 text-gray-600 dark:text-gray-300"><strong>Plano:</strong> ${c.resumo}</p>` : ''}
+                  <div class="flex items-center gap-2 mt-2">
+                    <span class="text-xs text-gray-400">Espectro:</span>
+                    <div class="spectrum flex-1 h-2 rounded-full relative max-w-xs">
+                      <div class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${corTendencia}"></div>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-2 mt-2 items-center">
+                    ${c.planoGoverno ? `
+                      <button onclick="abrirPlano('${c.nome.replace(/'/g,"\\'")}','${c.partido}','${c.tendencia}','${cor.replace('#','')}',\`${c.planoGoverno.replace(/`/g,"\\`")}\`, '${c.linkPlano || ''}')" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline inline-flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Ver Plano
+                      </button>
+                    ` : ''}
+                    
+                    <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                    ${c.coligacao ? `<div class="w-full mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('listaGovernadores').innerHTML = botoesOrdenacao + html;
+      atualizarContagens();
+    }
+
+    // ============ SENADORES ============
+    function renderSenadores() {
+      if (estadoAtual === 'todos') {
+        document.getElementById('listaSenadores').innerHTML = '';
+        document.getElementById('semDadosSenador').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('semDadosSenador').classList.add('hidden');
+
+      let candidatos = SENADORES_POR_ESTADO[estadoAtual] || [];
+      if (alinhamentoAtual !== 'todos') {
+        candidatos = candidatos.filter(c => {
+          if (alinhamentoAtual === 'Lula') return c.aliadoLula;
+          return !c.aliadoLula;
+        });
+      }
+
+      if (candidatos.length === 0) {
+        document.getElementById('listaSenadores').innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum candidato encontrado para este filtro</p>';
+        return;
+      }
+
+      if (sortSenador === 'nome') candidatos.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (sortSenador === 'numero') candidatos.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else candidatos.sort((a, b) => a.partido.localeCompare(b.partido));
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar:</span>
+          <button onclick="sortSenador='nome';renderSenadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortSenador==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="sortSenador='numero';renderSenadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortSenador==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+          <button onclick="sortSenador='partido';renderSenadores()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortSenador==='partido' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Partido</button>
+        </div>
+      `;
+
+      const html = candidatos.map(c => {
+        const cor = c.aliadoLula ? '#3b82f6' : '#ef4444';
+        const label = c.aliadoLula ? 'Lula' : (c.tendencia.includes('Direita') ? 'Flávio' : 'Independente');
+        const tendenciaPct = c.tendencia.includes('Esquerda') ? 20 : c.tendencia.includes('Centro') ? 45 : c.tendencia.includes('Direita') ? 70 : 45;
+        const corTendencia = tendenciaPct < 30 ? '#ef4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
+        const fotoUrl = c.foto || '';
+        const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-12 h-12 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-12 h-12 rounded-full items-center justify-center text-white font-bold text-sm border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const suplentes = [c.suplente1, c.suplente2].filter(Boolean);
+        const suplenteHtml = suplentes.length > 0 ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-2"><span class="font-medium">Suplentes:</span> ${suplentes.join(', ')}</p>` : '';
+        const partidoLogo = getPartidoLogo(c.partido);
+        const partidoNome = getPartidoNome(c.partido);
+        const partidoHtml = partidoLogo
+          ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:none">${partidoNome}</span></div>`
+          : '';
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover">
+            <div class="flex items-start gap-3">
+              ${fotoHtml}
+              <div class="flex-1 min-w-0">
+                ${partidoHtml}
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-sm font-bold mb-2" style="line-height: 0.9;">${c.nomeUrna}<br>
+                      <small class="font-normal text-xs text-gray-500 dark:text-gray-400">${c.nome}</small>
+                    </h3>
+                  ${c.numero ? `<span class="text-xs font-mono px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : ''}
+                </div>
+                <div class="flex items-center gap-1 flex-wrap mb-1">
+                  <span class="text-xs text-gray-500">${c.tendencia}</span>
+                  <span class="text-xs font-medium" style="color:${cor}">${label}</span>
+                </div>
+                ${c.pesquisas ? `<p class="text-xs text-gray-500">Pesquisas: ${c.pesquisas}</p>` : ''}
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-xs text-gray-400">Espectro:</span>
+                  <div class="spectrum flex-1 h-1.5 rounded-full relative max-w-[120px]">
+                    <div class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${corTendencia}"></div>
+                  </div>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${c.tendenciaCor}20;color:${corTendencia}">${c.tendencia}</span>
+                </div>
+                ${suplenteHtml}
+                ${c.leis && c.leis.length > 0 ? `
+                  <div class="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Leis/Autorias:</p>
+                    ${c.leis.map(l => `
+                      <div class="text-xs text-primary-600 dark:text-primary-400">
+                        • <strong>${l.nome}</strong>: ${l.descricao}
+                        <span class="text-gray-400">(${l.status})</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+                <div class="mt-1">
+                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                  ${c.coligacao ? `<div class="mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('listaSenadores').innerHTML = botoesOrdenacao + html;
+      atualizarContagens();
+    }
+
+    // ============ DEPUTADO FEDERAL ============
+    let depFederalPage = 1;
+    const depFederalPerPage = 50;
+    function renderDepFederal(page) {
+      page = page || 1;
+      depFederalPage = page;
+      if (estadoAtual === 'todos') {
+        document.getElementById('listaDepFederal').innerHTML = '';
+        document.getElementById('semDadosDepFederal').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('semDadosDepFederal').classList.add('hidden');
+
+      let candidatos = DEPUTADOS_FEDERAIS_DESTAQUE[estadoAtual] || [];
+      if (alinhamentoAtual !== 'todos') {
+        candidatos = candidatos.filter(c => {
+          if (alinhamentoAtual === 'Lula') return c.tendencia.includes('Esquerda') || c.tendencia.includes('Centro-Esquerda');
+          return c.tendencia.includes('Direita') || c.tendencia.includes('Centro-Direita');
+        });
+      }
+
+      if (candidatos.length === 0) {
+        document.getElementById('listaDepFederal').innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum candidato encontrado para este filtro</p>';
+        return;
+      }
+
+      if (sortDepFederal === 'nome') candidatos.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (sortDepFederal === 'numero') candidatos.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else candidatos.sort((a, b) => a.partido.localeCompare(b.partido));
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar:</span>
+          <button onclick="sortDepFederal='nome';depFederalPage=1;renderDepFederal()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepFederal==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="sortDepFederal='numero';depFederalPage=1;renderDepFederal()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepFederal==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+          <button onclick="sortDepFederal='partido';depFederalPage=1;renderDepFederal()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepFederal==='partido' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Partido</button>
+        </div>
+      `;
+
+      const total = candidatos.length;
+      const totalPages = Math.ceil(total / depFederalPerPage);
+      const start = (page - 1) * depFederalPerPage;
+      const paged = candidatos.slice(start, start + depFederalPerPage);
+
+      const html = paged.map(c => {
+        const cor = c.tendenciaCor || '#888';
+        const tendenciaPct = c.tendenciaPct || 50;
+        const corTendencia = tendenciaPct < 30 ? '#ef4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
+        const fotoUrl = c.foto || '';
+        const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-10 h-10 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-10 h-10 rounded-full items-center justify-center text-white font-bold text-xs border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs border-2" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
+        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '';
+        const partidoLogo = getPartidoLogo(c.partido);
+        const partidoNome = getPartidoNome(c.partido);
+        const partidoHtml = partidoLogo
+          ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:none">${partidoNome}</span></div>`
+          : '';
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover">
+            <div class="flex items-start gap-3">
+              ${fotoHtml}
+              <div class="flex-1 min-w-0">
+                ${partidoHtml}
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-xl font-bold mb-2" style="line-height: 0.9;">${c.nomeUrna}<br>
+                    <small class="font-normal text-xs text-gray-500 dark:text-gray-400">${c.nome}</small>
+                  </h3>
+                  ${c.numero ? `<span class="text-xs font-mono px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : ''}
+                </div>
+                <div class="flex items-center gap-1 flex-wrap mb-1">
+                  <span class="text-xs text-gray-500">${c.tendencia}</span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-xs text-gray-400">Espectro:</span>
+                  <div class="spectrum flex-1 h-1.5 rounded-full relative max-w-[120px]">
+                    <div class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${corTendencia}"></div>
+                  </div>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${c.tendenciaCor}20;color:${corTendencia}">${c.tendencia}</span>
+                </div>
+                <div class="mt-1">
+                  ${linkTSE}
+                  ${c.coligacao ? `<div class="mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let paginacao = '';
+      if (totalPages > 1) {
+        paginacao = `<div class="flex items-center justify-center gap-2 mt-4 flex-wrap">
+          <span class="text-xs text-gray-500">Mostrando ${start+1}-${Math.min(start+depFederalPerPage, total)} de ${total}</span>
+          ${page > 1 ? `<button onclick="renderDepFederal(${page-1})" class="px-3 py-1 text-xs rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">Anterior</button>` : ''}
+          ${page < totalPages ? `<button onclick="renderDepFederal(${page+1})" class="px-3 py-1 text-xs rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">Proximo</button>` : ''}
+          <span class="text-xs text-gray-400">Pagina ${page}/${totalPages}</span>
+        </div>`;
+      }
+      document.getElementById('listaDepFederal').innerHTML = botoesOrdenacao + html + paginacao;
+      atualizarContagens();
+    }
+
+    // ============ DEPUTADO ESTADUAL ============
+    let depEstadualPage = 1;
+    const depEstadualPerPage = 50;
+    function renderDepEstadual(page) {
+      page = page || 1;
+      depEstadualPage = page;
+      if (estadoAtual === 'todos') {
+        document.getElementById('listaDepEstadual').innerHTML = '';
+        document.getElementById('semDadosDepEstadual').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('semDadosDepEstadual').classList.add('hidden');
+
+      let candidatos = DEPUTADOS_ESTADUAIS_DESTAQUE[estadoAtual] || [];
+      if (alinhamentoAtual !== 'todos') {
+        candidatos = candidatos.filter(c => {
+          if (alinhamentoAtual === 'Lula') return c.tendencia.includes('Esquerda') || c.tendencia.includes('Centro-Esquerda');
+          return c.tendencia.includes('Direita') || c.tendencia.includes('Centro-Direita');
+        });
+      }
+
+      if (candidatos.length === 0) {
+        document.getElementById('listaDepEstadual').innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum candidato encontrado para este filtro</p>';
+        return;
+      }
+
+      if (sortDepEstadual === 'nome') candidatos.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (sortDepEstadual === 'numero') candidatos.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else candidatos.sort((a, b) => a.partido.localeCompare(b.partido));
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar:</span>
+          <button onclick="sortDepEstadual='nome';depEstadualPage=1;renderDepEstadual()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepEstadual==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="sortDepEstadual='numero';depEstadualPage=1;renderDepEstadual()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepEstadual==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+          <button onclick="sortDepEstadual='partido';depEstadualPage=1;renderDepEstadual()" class="px-3 py-1 rounded-full text-xs font-medium transition ${sortDepEstadual==='partido' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Partido</button>
+        </div>
+      `;
+
+      const total = candidatos.length;
+      const totalPages = Math.ceil(total / depEstadualPerPage);
+      const start = (page - 1) * depEstadualPerPage;
+      const paged = candidatos.slice(start, start + depEstadualPerPage);
+
+      const html = paged.map(c => {
+        const cor = c.tendenciaCor || '#888';
+        const tendenciaPct = c.tendenciaPct || 50;
+        const corTendencia = tendenciaPct < 30 ? '#ef4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
+        const fotoUrl = c.foto || '';
+        const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-10 h-10 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-10 h-10 rounded-full items-center justify-center text-white font-bold text-xs border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xs" style="background:${cor}">${c.partido.substring(0,4)}</div>`;
+        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '';
+        const partidoLogo = getPartidoLogo(c.partido);
+        const partidoNome = getPartidoNome(c.partido);
+        const partidoHtml = partidoLogo
+          ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:none">${partidoNome}</span></div>`
+          : '';
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover">
+            <div class="flex items-start gap-3">
+              ${fotoHtml}
+              <div class="flex-1 min-w-0">
+                ${partidoHtml}
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="text-xl font-bold mb-2" style="line-height: 0.9;">${c.nomeUrna}<br>
+                    <small class="font-normal text-xs text-gray-500 dark:text-gray-400">${c.nome}</small>
+                  </h3>
+                  ${c.numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : ''}
+                </div>
+                <div class="flex items-center gap-1 flex-wrap mb-1">
+                  <span class="text-xs text-gray-500">${c.tendencia}</span>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-xs text-gray-400">Espectro:</span>
+                  <div class="spectrum flex-1 h-1.5 rounded-full relative max-w-[120px]">
+                    <div class="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${corTendencia}"></div>
+                  </div>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${c.tendenciaCor}20;color:${corTendencia}">${c.tendencia}</span>
+                </div>
+                <div class="mt-1">
+                  ${linkTSE}
+                  ${c.coligacao ? `<div class="mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let paginacao = '';
+      if (totalPages > 1) {
+        paginacao = `<div class="flex items-center justify-center gap-2 mt-4 flex-wrap">
+          <span class="text-xs text-gray-500">Mostrando ${start+1}-${Math.min(start+depEstadualPerPage, total)} de ${total}</span>
+          ${page > 1 ? `<button onclick="renderDepEstadual(${page-1})" class="px-3 py-1 text-xs rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">Anterior</button>` : ''}
+          ${page < totalPages ? `<button onclick="renderDepEstadual(${page+1})" class="px-3 py-1 text-xs rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">Proximo</button>` : ''}
+          <span class="text-xs text-gray-400">Pagina ${page}/${totalPages}</span>
+        </div>`;
+      }
+      document.getElementById('listaDepEstadual').innerHTML = botoesOrdenacao + html + paginacao;
+      atualizarContagens();
+    }
+
+    // ============ MODAL ============
+    function abrirPlano(nome, partido, tendencia, corHex, plano, link) {
+      document.getElementById('modalNome').textContent = nome;
+      document.getElementById('modalPartido').innerHTML = `
+        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold mr-2" style="background:#${corHex}20;color:#${corHex}">${partido}</span>
+        <span class="text-xs" style="color:#${corHex}">${tendencia}</span>
+      `;
+      document.getElementById('modalConteudo').innerHTML = `
+        <div class="prose dark:prose-invert max-w-none">
+          <h4 class="text-lg font-bold mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Plano de Governo
+          </h4>
+          <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm mb-4">${plano}</p>
+          ${link ? `
+            <a href="${link}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              Acessar documento oficial no TSE
+            </a>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('planoModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function abrirProposicao(numero, autor, ementa, status, link, area) {
+      document.getElementById('modalNome').textContent = numero;
+      document.getElementById('modalPartido').innerHTML = `
+        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-bold mr-2 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">${area}</span>
+        <span class="text-xs text-gray-500">${autor}</span>
+      `;
+      document.getElementById('modalConteudo').innerHTML = `
+        <div class="prose dark:prose-invert max-w-none">
+          <h4 class="text-lg font-bold mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Proposição
+          </h4>
+          <div class="mb-4">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Autor</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">${autor}</p>
+          </div>
+          <div class="mb-4">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Ementa</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">${ementa}</p>
+          </div>
+          <div class="mb-4">
+            <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Status</p>
+            <p class="text-sm text-gray-700 dark:text-gray-300">${status}</p>
+          </div>
+          ${link ? `
+            <a href="${link}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              Acessar no site oficial
+            </a>
+          ` : ''}
+        </div>
+      `;
+      document.getElementById('planoModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal() {
+      document.getElementById('planoModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
+
+    // ============ PARTIDOS ============
+    let partidosOrdenacao = 'total';
+    function renderPartidos() {
+      const partidos = {};
+
+      function addPartido(nome) {
+        if (!nome) return;
+        if (!partidos[nome]) {
+          partidos[nome] = { nome: nome, total: 0, numero: typeof getPartidoNumero === 'function' ? getPartidoNumero(nome) : '' };
+        }
+        partidos[nome].total++;
+      }
+
+      CANDIDATOS_PRESIDENTE.forEach(c => addPartido(c.partido));
+      for (const st of ESTADOS) {
+        (GOVERNADORES_POR_ESTADO[st] || []).forEach(c => addPartido(c.partido));
+        (SENADORES_POR_ESTADO[st] || []).forEach(c => addPartido(c.partido));
+        (DEPUTADOS_FEDERAIS_DESTAQUE[st] || []).forEach(c => addPartido(c.partido));
+        (DEPUTADOS_ESTADUAIS_DESTAQUE[st] || []).forEach(c => addPartido(c.partido));
+      }
+
+      let sorted = Object.values(partidos);
+      if (partidosOrdenacao === 'nome') sorted.sort((a, b) => a.nome.localeCompare(b.nome));
+      else if (partidosOrdenacao === 'numero') sorted.sort((a, b) => (a.numero || 0) - (b.numero || 0));
+      else sorted.sort((a, b) => b.total - a.total);
+
+      const maxTotal = sorted.length > 0 ? sorted[0].total : 1;
+
+      const botoesOrdenacao = `
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-sm text-gray-500 dark:text-gray-400">Ordenar por:</span>
+          <button onclick="partidosOrdenacao='total';renderPartidos()" class="px-3 py-1 rounded-full text-xs font-medium transition ${partidosOrdenacao==='total' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Candidatos</button>
+          <button onclick="partidosOrdenacao='nome';renderPartidos()" class="px-3 py-1 rounded-full text-xs font-medium transition ${partidosOrdenacao==='nome' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Nome</button>
+          <button onclick="partidosOrdenacao='numero';renderPartidos()" class="px-3 py-1 rounded-full text-xs font-medium transition ${partidosOrdenacao==='numero' ? 'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}">Número</button>
+        </div>
+      `;
+
+      const cards = sorted.map(p => {
+        const logo = typeof getPartidoLogo === 'function' ? getPartidoLogo(p.nome) : '';
+        const cor = typeof getPartidoCor === 'function' ? getPartidoCor(p.nome) : '#6b7280';
+        const numero = p.numero || '';
+        const nomeCompleto = typeof getPartidoNome === 'function' ? getPartidoNome(p.nome) : p.nome;
+        const pct = Math.round((p.total / maxTotal) * 100);
+        const tendencia = typeof getPartidoTendencia === 'function' ? getPartidoTendencia(p.nome) : '';
+        const tendenciaCor = typeof getPartidoTendenciaCor === 'function' ? getPartidoTendenciaCor(p.nome) : '#888';
+        const tendenciaPct = typeof getPartidoTendenciaPct === 'function' ? getPartidoTendenciaPct(p.nome) : 50;
+
+        return `
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-3">
+                ${logo ? `<img src="${logo}" alt="${p.nome}" class="h-10 w-auto rounded" onerror="this.style.display='none'">` : `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xs" style="background:${cor}">${p.nome.substring(0,4)}</div>`}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-bold text-sm">${p.nome}</h4>
+                    ${numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${numero}</span>` : ''}
+                  </div>
+                  ${nomeCompleto && nomeCompleto !== p.nome ? `<p class="text-xs text-gray-500 dark:text-gray-400 truncate">${nomeCompleto}</p>` : ''}
+                </div>
+              </div>
+              <div class="mt-3">
+                ${tendencia ? `
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-xs text-gray-500 dark:text-gray-400">Espectro:</span>
+                  <div class="spectrum flex-1 h-2 rounded-full relative max-w-xs">
+                    <div class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${tendenciaCor}"></div>
+                  </div>
+                  <span class="text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap" style="background:${tendenciaCor}20;color:${tendenciaCor}">${tendencia}</span>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            <div class="mt-2">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs text-gray-500">${p.total} candidatos</span>
+              </div>
+              <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full rounded-full" style="width:${pct}%;background:${cor}"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('ordenacaoPartidos').innerHTML = botoesOrdenacao;
+      document.getElementById('listaPartidos').innerHTML = cards;
+      atualizarContagens();
+    }
+
+    // ============ INIT ============
+    initEstados();
+    renderPresidente();
+  </script>
+</body>
+</html>
