@@ -2,79 +2,79 @@ const fs = require("fs");
 const path = require("path");
 
 const PARTY_TENDENCY = {
-  PT: { tendencia: "Esquerda", cor: "#ef4444", pct: 20 },
-  PSOL: { tendencia: "Esquerda", cor: "#dc2626", pct: 10 },
-  PCB: { tendencia: "Esquerda Radical", cor: "#dc2626", pct: 5 },
-  PSTU: { tendencia: "Esquerda Radical", cor: "#dc2626", pct: 5 },
-  UP: { tendencia: "Esquerda", cor: "#ef4444", pct: 10 },
-  PCdoB: { tendencia: "Esquerda", cor: "#ef4444", pct: 15 },
-  REDE: { tendencia: "Centro-Esquerda", cor: "#22c55e", pct: 35 },
-  PDT: { tendencia: "Centro-Esquerda", cor: "#22c55e", pct: 38 },
-  PSB: { tendencia: "Centro-Esquerda", cor: "#22c55e", pct: 35 },
-  AVANTE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  MDB: { tendencia: "Centro", cor: "#eab308", pct: 48 },
-  PSD: { tendencia: "Centro", cor: "#eab308", pct: 45 },
-  CIDADANIA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  SOLIDARIEDADE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
   AGIR: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  PROS: { tendencia: "Centro", cor: "#eab308", pct: 48 },
+  AVANTE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
+  CIDADANIA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
   DC: { tendencia: "Centro", cor: "#eab308", pct: 45 },
-  MOBILIZA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  PMN: { tendencia: "Centro-Esquerda", cor: "#22c55e", pct: 35 },
-  PV: { tendencia: "Centro-Esquerda", cor: "#22c55e", pct: 35 },
-  PODE: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 60 },
-  UNIÃO: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 58 },
-  "UNIAO BRASIL": { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 58 },
-  PP: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 55 },
-  REPUBLICANOS: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 58 },
-  PSDB: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 55 },
-  PATRIOTA: { tendencia: "Direita", cor: "#3b82f6", pct: 70 },
-  PL: { tendencia: "Direita", cor: "#3b82f6", pct: 72 },
-  NOVO: { tendencia: "Direita Liberal", cor: "#3b82f6", pct: 70 },
-  INTERSINDICAL: { tendencia: "Esquerda", cor: "#ef4444", pct: 15 },
   DEMOCRATA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
+  INTERSINDICAL: { tendencia: "Esquerda", cor: "#ff4444", pct: 15 },
+  MDB: { tendencia: "Centro", cor: "#eab308", pct: 48 },
   MISSÃO: { tendencia: "Centro-Liberal", cor: "#eab308", pct: 50 },
-  PRTB: { tendencia: "Direita", cor: "#3b82f6", pct: 72 },
-  PRP: { tendencia: "Direita", cor: "#3b82f6", pct: 70 },
-  PRD: { tendencia: "Centro-Direita", cor: "#3b82f6", pct: 60 },
+  MOBILIZA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
+  NOVO: { tendencia: "Direita Liberal", cor: "#0055ff", pct: 70 },
+  PATRIOTA: { tendencia: "Direita", cor: "#3b820055fff6", pct: 70 },
+  PCB: { tendencia: "Esquerda Radical", cor: "#ff0000", pct: 5 },
+  PCdoB: { tendencia: "Esquerda", cor: "#ff4444", pct: 15 },
+  PDT: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 38 },
+  PL: { tendencia: "Direita", cor: "#0055ff", pct: 72 },
+  PMN: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
+  PODE: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 60 },
+  PP: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 55 },
+  PRD: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 60 },
+  PROS: { tendencia: "Centro", cor: "#0055ff", pct: 48 },
+  PRP: { tendencia: "Direita", cor: "#0055ff", pct: 70 },
+  PRTB: { tendencia: "Direita", cor: "#0055ff", pct: 72 },
+  PSB: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
+  PSD: { tendencia: "Centro", cor: "#eab308", pct: 45 },
+  PSDB: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 55 },
+  PSOL: { tendencia: "Esquerda", cor: "#FF4444", pct: 10 },
+  PSTU: { tendencia: "Esquerda Radical", cor: "#ff0000", pct: 5 },
+  PT: { tendencia: "Esquerda", cor: "#FF4444", pct: 20 },
+  PV: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
+  REDE: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
+  REPUBLICANOS: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
+  SOLIDARIEDADE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
   UCDB: { tendencia: "Centro", cor: "#eab308", pct: 50 },
+  UNIÃO: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
+  "UNIAO BRASIL": { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
+  UP: { tendencia: "Esquerda", cor: "#ff4444", pct: 10 },
 };
 
 const PARTY_INFO = {
-  PT: { nome: "Partido dos Trabalhadores", numero: 13, cor: "#CC0000" },
-  PL: { nome: "Partido Liberal", numero: 22, cor: "#003399" },
-  PSDB: { nome: "PSDB", numero: 45, cor: "#0066CC" },
-  UNIAO: { nome: "Uniao Brasil", numero: 44, cor: "#003399" },
-  MDB: { nome: "MDB", numero: 15, cor: "#0066CC" },
-  PSD: { nome: "PSD", numero: 55, cor: "#FF6600" },
-  PP: { nome: "Progressistas", numero: 11, cor: "#003399" },
-  REPUBLICANOS: { nome: "Republicanos", numero: 10, cor: "#003399" },
-  PODE: { nome: "Podemos", numero: 20, cor: "#003399" },
-  PSB: { nome: "PSB", numero: 40, cor: "#FF9900" },
-  PDT: { nome: "PDT", numero: 12, cor: "#CC0000" },
-  PV: { nome: "Partido Verde", numero: 43, cor: "#009933" },
-  AVANTE: { nome: "Avante", numero: 70, cor: "#FF6600" },
-  CIDADANIA: { nome: "Cidadania", numero: 23, cor: "#FF6600" },
-  PSOL: { nome: "PSOL", numero: 50, cor: "#CC0000" },
-  REDE: { nome: "Rede", numero: 18, cor: "#009933" },
-  SOLIDARIEDADE: { nome: "Solidariedade", numero: 77, cor: "#FF6600" },
-  NOVO: { nome: "Novo", numero: 30, cor: "#FF6600" },
-  UP: { nome: "UP", numero: 80, cor: "#CC0000" },
-  PSTU: { nome: "PSTU", numero: 16, cor: "#CC0000" },
-  PCB: { nome: "PCB", numero: 21, cor: "#CC0000" },
-  PCDOB: { nome: "PCdoB", numero: 65, cor: "#CC0000" },
-  AGIR: { nome: "Agir", numero: 36, cor: "#FF6600" },
-  MOBILIZA: { nome: "Mobiliza", numero: 33, cor: "#FF6600" },
-  DC: { nome: "DC", numero: 27, cor: "#FF6600" },
-  PRTB: { nome: "PRTB", numero: 28, cor: "#003399" },
-  PRD: { nome: "PRD", numero: 25, cor: "#003399" },
-  MISSÃO: { nome: "Missao", numero: 14, cor: "#003399" },
-  MISSAO: { nome: "Missao", numero: 14, cor: "#003399" },
-  DEMOCRATA: { nome: "Democrata", numero: 35, cor: "#003399" },
-  PCO: { nome: "PCO", numero: 29, cor: "#CC0000" },
-  PROS: { nome: "PROS", numero: 90, cor: "#003399" },
-  PMN: { nome: "PMN", numero: 19, cor: "#CC0000" },
-  PRP: { nome: "PRP", numero: 44, cor: "#003399" },
+  AGIR: { nome: "Agir", numero: 36, cor: "#eab308" },
+  AVANTE: { nome: "Avante", numero: 70, cor: "#eab308" },
+  CIDADANIA: { nome: "Cidadania", numero: 23, cor: "#eab308" },
+  DC: { nome: "DC", numero: 27, cor: "#eab308" },
+  DEMOCRATA: { nome: "Democrata", numero: 35, cor: "#eab308" },
+  MDB: { nome: "MDB", numero: 15, cor: "#eab308" },
+  MISSÃO: { nome: "Missao", numero: 14, cor: "#eab308" },
+  MISSAO: { nome: "Missao", numero: 14, cor: "#eab308" },
+  MOBILIZA: { nome: "Mobiliza", numero: 33, cor: "#eab308" },
+  NOVO: { nome: "Novo", numero: 30, cor: "#0055ff" },
+  PCB: { nome: "PCB", numero: 21, cor: "#ff0000" },
+  PCDOB: { nome: "PCdoB", numero: 65, cor: "#ff4444" },
+  PCO: { nome: "PCO", numero: 29, cor: "#ff0000" },
+  PDT: { nome: "PDT", numero: 12, cor: "#f97316" },
+  PL: { nome: "Partido Liberal", numero: 22, cor: "#0055ff" },
+  PMN: { nome: "PMN", numero: 19, cor: "#f97316" },
+  PODE: { nome: "Podemos", numero: 20, cor: "#22c55e" },
+  PP: { nome: "Progressistas", numero: 11, cor: "#22c55e" },
+  PRD: { nome: "PRD", numero: 25, cor: "#22c55e" },
+  PROS: { nome: "PROS", numero: 90, cor: "#eab308" },
+  PRP: { nome: "PRP", numero: 44, cor: "#0055ff" },
+  PRTB: { nome: "PRTB", numero: 28, cor: "#0055ff" },
+  PSB: { nome: "PSB", numero: 40, cor: "#f97316" },
+  PSD: { nome: "PSD", numero: 55, cor: "#eab308" },
+  PSDB: { nome: "PSDB", numero: 45, cor: "#22c55e" },
+  PSOL: { nome: "PSOL", numero: 50, cor: "#ff4444" },
+  PSTU: { nome: "PSTU", numero: 16, cor: "#FF0000" },
+  PT: { nome: "Partido dos Trabalhadores", numero: 13, cor: "#ff4444" },
+  PV: { nome: "Partido Verde", numero: 43, cor: "#f97316" },
+  REDE: { nome: "Rede", numero: 18, cor: "#f97316" },
+  REPUBLICANOS: { nome: "Republicanos", numero: 10, cor: "#22c55e" },
+  SOLIDARIEDADE: { nome: "Solidariedade", numero: 77, cor: "#eab308" },
+  UNIAO: { nome: "Uniao Brasil", numero: 44, cor: "#22c55e" },
+  UP: { nome: "UP", numero: 80, cor: "#ff4444" },
 };
 
 function getTendency(partido) {
@@ -545,24 +545,35 @@ pl += "// Fonte: divulgacandcontas.tse.jus.br\n";
 pl += "// ============================================\n\n";
 pl += "const PARTIDOS_LOGOS = {\n";
 // Helper to normalize sigla (remove diacritics)
-const normalizeSigla = (s) => (s || "").normalize('NFD').replace(/\p{Diacritic}/gu, '').toUpperCase();
+const normalizeSigla = (s) =>
+  (s || "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toUpperCase();
 for (const sigla of [...allParties].sort()) {
   const norm = normalizeSigla(sigla);
-  const info = PARTY_INFO[norm] || PARTY_INFO[sigla] || { nome: sigla, numero: 0, cor: "#888" };
+  const info = PARTY_INFO[norm] ||
+    PARTY_INFO[sigla] || { nome: sigla, numero: 0, cor: "#888" };
   const logoName = norm === "PCDOB" ? "PCB" : norm === "UNIAO" ? "UNIAO" : norm;
   // original sigla entry
   pl += "  " + sigla + ": {\n";
-  pl += "    nome: \"" + info.nome + "\",\n";
-  pl += "    logo: \"https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/" + logoName + ".jpg\",\n";
-  pl += "    cor: \"" + info.cor + "\",\n";
+  pl += '    nome: "' + info.nome + '",\n';
+  pl +=
+    '    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/' +
+    logoName +
+    '.jpg",\n';
+  pl += '    cor: "' + info.cor + '",\n';
   pl += "    numero: " + info.numero + ",\n";
   pl += "  },\n";
   // alias entry for normalized key if different
   if (norm !== sigla) {
     pl += "  " + norm + ": {\n";
-    pl += "    nome: \"" + info.nome + "\",\n";
-    pl += "    logo: \"https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/" + logoName + ".jpg\",\n";
-    pl += "    cor: \"" + info.cor + "\",\n";
+    pl += '    nome: "' + info.nome + '",\n';
+    pl +=
+      '    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/' +
+      logoName +
+      '.jpg",\n';
+    pl += '    cor: "' + info.cor + '",\n';
     pl += "    numero: " + info.numero + ",\n";
     pl += "  },\n";
   }

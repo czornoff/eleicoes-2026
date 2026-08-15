@@ -1,4 +1,4 @@
-const TOTAL_QUESTIONS = 2;
+const TOTAL_QUESTIONS = 15;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".totalQuestions").forEach((span) => {
@@ -806,7 +806,7 @@ function getResultInfo(scores, leftScore, centerScore, rightScore) {
       title: "Esquerda / Progressista",
       description:
         "Suas respostas indicam uma tendência clara ao espectro de esquerda.",
-      color: "#ef4444",
+      color: "#ff4444",
     };
   } else if (scores.E >= 8) {
     return {
@@ -1010,7 +1010,7 @@ function renderLocalCandidates() {
   ) {
     const govList = GOVERNADORES_POR_ESTADO[uf]
       .map((c) => {
-        const cor = c.aliadoLula ? "#3b82f6" : "#ef4444";
+        const cor = c.tendenciaCor ? c.tendenciaCor : "#888";
         const diff = Math.abs(c.tendenciaPct - userPositionGlobal);
         const match = Math.max(0, 100 - diff);
         return { ...c, tendenciaCor: cor, match };
@@ -1030,7 +1030,7 @@ function renderLocalCandidates() {
   if (typeof SENADORES_POR_ESTADO !== "undefined" && SENADORES_POR_ESTADO[uf]) {
     const senList = SENADORES_POR_ESTADO[uf]
       .map((c) => {
-        const cor = c.aliadoLula ? "#3b82f6" : "#ef4444";
+        const cor = c.tendenciaCor ? c.tendenciaCor : "#888";
         const tendenciaPct = c.tendencia.includes("Esquerda")
           ? 20
           : c.tendencia.includes("Centro")
@@ -1061,7 +1061,7 @@ function renderLocalCandidates() {
     const depList = DEPUTADOS_FEDERAIS_DESTAQUE[uf]
       .map((c) => {
         const cor = c.tendencia.includes("Esquerda")
-          ? "#ef4444"
+          ? "#ff4444"
           : c.tendencia.includes("Centro")
             ? "#eab308"
             : "#3b82f6";
@@ -1077,7 +1077,7 @@ function renderLocalCandidates() {
         return { ...c, tendenciaPct, tendenciaCor: cor, match };
       })
       .sort((a, b) => b.match - a.match)
-      .slice(0, 2);
+      .slice(0, 3);
     depFedContainer.innerHTML = depList
       .map((c) => renderCandidateCard(c, c.tendenciaCor))
       .join("");
@@ -1095,7 +1095,7 @@ function renderLocalCandidates() {
     const depList = DEPUTADOS_ESTADUAIS_DESTAQUE[uf]
       .map((c) => {
         const cor = c.tendencia.includes("Esquerda")
-          ? "#ef4444"
+          ? "#ff4444"
           : c.tendencia.includes("Centro")
             ? "#eab308"
             : "#3b82f6";
@@ -1111,7 +1111,7 @@ function renderLocalCandidates() {
         return { ...c, tendenciaPct, tendenciaCor: cor, match };
       })
       .sort((a, b) => b.match - a.match)
-      .slice(0, 2);
+      .slice(0, 5);
     depEstContainer.innerHTML = depList
       .map((c) => renderCandidateCard(c, c.tendenciaCor))
       .join("");
@@ -1128,8 +1128,10 @@ function renderCandidateCard(c, cor) {
       : c.match >= 50
         ? "text-yellow-600 dark:text-yellow-400"
         : "text-gray-500 dark:text-gray-400";
-    const borderColor = "";
 
+  const linkTSE = c.linkPlano
+    ? `<a href="${c.linkPlano}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>`
+    : "";
   const fotoUrl = c.foto || "";
   const fotoHtml = fotoUrl
     ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-10 h-10 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-10 h-10 rounded-full items-center justify-center text-white font-bold text-xs border-2 flex-shrink-0 hidden" style="background:${cor}">${c.nome
@@ -1151,29 +1153,29 @@ function renderCandidateCard(c, cor) {
   const partidoNome =
     typeof getPartidoNome === "function" ? getPartidoNome(c.partido) : "";
   const partidoHtml = partidoLogo
-    ? `<div class="float-right ml-2"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-sm font-medium" style="color:${c.tendenciaCor}; display:inline">${partidoNome}</span></div>`
+    ? `<div class="w-32 text-center"><img src="${partidoLogo}" alt="${c.partido}" class="h-10 w-auto rounded mx-auto" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'"><span class="text-[10px] font-medium" style="color:${c.tendenciaCor}; display:inline">${partidoNome}</span></div>`
     : "";
 
   return `
     <div class="bg-white dark:bg-gray-800 rounded-xl p-3 flex items-center gap-3" style="border:2px solid ${cor}">
       ${fotoHtml}
       <div class="flex-2 min-w-0">
-        ${partidoHtml}
+        
         <div class="flex items-center gap-1 flex-wrap">
-          <span class="font-bold text-sm truncate">${c.nome}</span>
+          <span class="font-bold text-sm truncate">${c.nomeUrna}</span>
           ${numeroHtml}
         </div>
         <div class="flex items-center gap-1 flex-wrap">
+          ${linkTSE}<br>
           <span class="text-xs text-gray-500">${c.tendencia}</span>
-          ${c.pesquisas ? `<span class="text-xs text-gray-400">${c.pesquisas}</span>` : ""}
         </div>
-        ${c.resumo ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">${c.resumo}</p>` : ""}
       </div>
-      <div class="flex-shrink-0 text-center">
-        <div class="text-lg font-extrabold ${matchColor}">${c.match}%</div>
-        <div class="text-[10px] text-gray-400">match</div>
-      </div>
-      <div class="flex-shrink-0 text-center">
+      <div class="ml-auto flex items-center gap-2 flex-shrink-0">
+        ${partidoHtml}
+        <div class="w-16 text-center">
+          <div class="text-lg font-extrabold ${matchColor}">${c.match}%</div>
+          <div class="text-[10px] text-gray-400">match</div>
+        </div>
       </div>
     </div>
   `;

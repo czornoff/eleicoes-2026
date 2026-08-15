@@ -12,7 +12,7 @@
         extend: {
           colors: {
             primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
-            result: { esquerda: '#ef4444', centro: '#eab308', direita: '#3b82f6' }
+            result: { esquerda: '#ff4444', centro: '#eab308', direita: '#0055ff' }
           }
         }
       }
@@ -31,7 +31,7 @@
     .option-card { transition: all 0.3s ease; }
     .option-card:hover { transform: translateY(-2px); }
     .option-card.selected { ring: 2px; }
-    .spectrum-bar { background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6); }
+    .spectrum { background: linear-gradient(to right, #ff0000, #f97316, #eab308, #22c55e, #0055ff); }
     .glass { backdrop-filter: blur(10px); }
     .theme-toggle { transition: transform 0.3s ease; }
     .theme-toggle:hover { transform: rotate(30deg); }
@@ -183,7 +183,7 @@
             <span>Centro</span>
             <span>Direita</span>
           </div>
-          <div class="spectrum-bar h-4 rounded-full relative">
+          <div class="spectrum h-4 rounded-full relative">
             <div id="spectrumMarker" class="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-900 dark:border-white rounded-full shadow-lg transition-all duration-1000" style="left: 50%"></div>
           </div>
         </div>
