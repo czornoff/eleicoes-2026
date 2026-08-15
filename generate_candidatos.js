@@ -1,90 +1,273 @@
 const fs = require("fs");
 const path = require("path");
 
-const PARTY_TENDENCY = {
-  AGIR: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  AVANTE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  CIDADANIA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  DC: { tendencia: "Centro", cor: "#eab308", pct: 45 },
-  DEMOCRATA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  INTERSINDICAL: { tendencia: "Esquerda", cor: "#ff4444", pct: 15 },
-  MDB: { tendencia: "Centro", cor: "#eab308", pct: 48 },
-  MISSÃO: { tendencia: "Centro-Liberal", cor: "#eab308", pct: 50 },
-  MOBILIZA: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  NOVO: { tendencia: "Direita Liberal", cor: "#0055ff", pct: 70 },
-  PATRIOTA: { tendencia: "Direita", cor: "#3b820055fff6", pct: 70 },
-  PCB: { tendencia: "Esquerda Radical", cor: "#ff0000", pct: 5 },
-  PCdoB: { tendencia: "Esquerda", cor: "#ff4444", pct: 15 },
-  PDT: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 38 },
-  PL: { tendencia: "Direita", cor: "#0055ff", pct: 72 },
-  PMN: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
-  PODE: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 60 },
-  PP: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 55 },
-  PRD: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 60 },
-  PROS: { tendencia: "Centro", cor: "#0055ff", pct: 48 },
-  PRP: { tendencia: "Direita", cor: "#0055ff", pct: 70 },
-  PRTB: { tendencia: "Direita", cor: "#0055ff", pct: 72 },
-  PSB: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
-  PSD: { tendencia: "Centro", cor: "#eab308", pct: 45 },
-  PSDB: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 55 },
-  PSOL: { tendencia: "Esquerda", cor: "#FF4444", pct: 10 },
-  PSTU: { tendencia: "Esquerda Radical", cor: "#ff0000", pct: 5 },
-  PT: { tendencia: "Esquerda", cor: "#FF4444", pct: 20 },
-  PV: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
-  REDE: { tendencia: "Centro-Esquerda", cor: "#f97316", pct: 35 },
-  REPUBLICANOS: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
-  SOLIDARIEDADE: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  UCDB: { tendencia: "Centro", cor: "#eab308", pct: 50 },
-  UNIÃO: { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
-  "UNIAO BRASIL": { tendencia: "Centro-Direita", cor: "#22c55e", pct: 58 },
-  UP: { tendencia: "Esquerda", cor: "#ff4444", pct: 10 },
-};
-
-const PARTY_INFO = {
-  AGIR: { nome: "Agir", numero: 36, cor: "#eab308" },
-  AVANTE: { nome: "Avante", numero: 70, cor: "#eab308" },
-  CIDADANIA: { nome: "Cidadania", numero: 23, cor: "#eab308" },
-  DC: { nome: "DC", numero: 27, cor: "#eab308" },
-  DEMOCRATA: { nome: "Democrata", numero: 35, cor: "#eab308" },
-  MDB: { nome: "MDB", numero: 15, cor: "#eab308" },
-  MISSÃO: { nome: "Missao", numero: 14, cor: "#eab308" },
-  MISSAO: { nome: "Missao", numero: 14, cor: "#eab308" },
-  MOBILIZA: { nome: "Mobiliza", numero: 33, cor: "#eab308" },
-  NOVO: { nome: "Novo", numero: 30, cor: "#0055ff" },
-  PCB: { nome: "PCB", numero: 21, cor: "#ff0000" },
-  PCDOB: { nome: "PCdoB", numero: 65, cor: "#ff4444" },
-  PCO: { nome: "PCO", numero: 29, cor: "#ff0000" },
-  PDT: { nome: "PDT", numero: 12, cor: "#f97316" },
-  PL: { nome: "Partido Liberal", numero: 22, cor: "#0055ff" },
-  PMN: { nome: "PMN", numero: 19, cor: "#f97316" },
-  PODE: { nome: "Podemos", numero: 20, cor: "#22c55e" },
-  PP: { nome: "Progressistas", numero: 11, cor: "#22c55e" },
-  PRD: { nome: "PRD", numero: 25, cor: "#22c55e" },
-  PROS: { nome: "PROS", numero: 90, cor: "#eab308" },
-  PRP: { nome: "PRP", numero: 44, cor: "#0055ff" },
-  PRTB: { nome: "PRTB", numero: 28, cor: "#0055ff" },
-  PSB: { nome: "PSB", numero: 40, cor: "#f97316" },
-  PSD: { nome: "PSD", numero: 55, cor: "#eab308" },
-  PSDB: { nome: "PSDB", numero: 45, cor: "#22c55e" },
-  PSOL: { nome: "PSOL", numero: 50, cor: "#ff4444" },
-  PSTU: { nome: "PSTU", numero: 16, cor: "#FF0000" },
-  PT: { nome: "Partido dos Trabalhadores", numero: 13, cor: "#ff4444" },
-  PV: { nome: "Partido Verde", numero: 43, cor: "#f97316" },
-  REDE: { nome: "Rede", numero: 18, cor: "#f97316" },
-  REPUBLICANOS: { nome: "Republicanos", numero: 10, cor: "#22c55e" },
-  SOLIDARIEDADE: { nome: "Solidariedade", numero: 77, cor: "#eab308" },
-  UNIAO: { nome: "Uniao Brasil", numero: 44, cor: "#22c55e" },
-  UP: { nome: "UP", numero: 80, cor: "#ff4444" },
+const PARTIES = {
+  AGIR: {
+    nome: "Agir",
+    numero: 36,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  AVANTE: {
+    nome: "Avante",
+    numero: 70,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  CIDADANIA: {
+    nome: "Cidadania",
+    numero: 23,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  DC: {
+    nome: "DC",
+    numero: 27,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 45,
+  },
+  DEMOCRATA: {
+    nome: "Democrata",
+    numero: 35,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  INTERSINDICAL: {
+    nome: "Intersindical",
+    numero: 0,
+    cor: "#ff4444",
+    tendencia: "Esquerda",
+    tendenciaPct: 15,
+  },
+  MDB: {
+    nome: "MDB",
+    numero: 15,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 48,
+  },
+  MISSAO: {
+    nome: "Missao",
+    numero: 14,
+    cor: "#eab308",
+    tendencia: "Centro-Liberal",
+    tendenciaPct: 50,
+  },
+  MOBILIZA: {
+    nome: "Mobiliza",
+    numero: 33,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  NOVO: {
+    nome: "Novo",
+    numero: 30,
+    cor: "#0055ff",
+    tendencia: "Direita Liberal",
+    tendenciaPct: 70,
+  },
+  PATRIOTA: {
+    nome: "Patriota",
+    numero: 0,
+    cor: "#3b82f6",
+    tendencia: "Direita",
+    tendenciaPct: 70,
+  },
+  PCB: {
+    nome: "PCB",
+    numero: 21,
+    cor: "#ff0000",
+    tendencia: "Esquerda Radical",
+    tendenciaPct: 5,
+  },
+  PCDOB: {
+    nome: "PCdoB",
+    numero: 65,
+    cor: "#ff4444",
+    tendencia: "Esquerda",
+    tendenciaPct: 15,
+  },
+  PCO: {
+    nome: "PCO",
+    numero: 29,
+    cor: "#ff0000",
+    tendencia: "Esquerda Radical",
+    tendenciaPct: 5,
+  },
+  PDT: {
+    nome: "PDT",
+    numero: 12,
+    cor: "#f97316",
+    tendencia: "Centro-Esquerda",
+    tendenciaPct: 38,
+  },
+  PL: {
+    nome: "Partido Liberal",
+    numero: 22,
+    cor: "#0055ff",
+    tendencia: "Direita",
+    tendenciaPct: 72,
+  },
+  PMN: {
+    nome: "PMN",
+    numero: 19,
+    cor: "#f97316",
+    tendencia: "Centro-Esquerda",
+    tendenciaPct: 35,
+  },
+  PODE: {
+    nome: "Podemos",
+    numero: 20,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 60,
+  },
+  PP: {
+    nome: "Progressistas",
+    numero: 11,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 55,
+  },
+  PRD: {
+    nome: "PRD",
+    numero: 25,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 60,
+  },
+  PROS: {
+    nome: "PROS",
+    numero: 90,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 48,
+  },
+  PRP: {
+    nome: "PRP",
+    numero: 44,
+    cor: "#0055ff",
+    tendencia: "Direita",
+    tendenciaPct: 70,
+  },
+  PRTB: {
+    nome: "PRTB",
+    numero: 28,
+    cor: "#0055ff",
+    tendencia: "Direita",
+    tendenciaPct: 72,
+  },
+  PSB: {
+    nome: "PSB",
+    numero: 40,
+    cor: "#f97316",
+    tendencia: "Centro-Esquerda",
+    tendenciaPct: 35,
+  },
+  PSD: {
+    nome: "PSD",
+    numero: 55,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 45,
+  },
+  PSDB: {
+    nome: "PSDB",
+    numero: 45,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 55,
+  },
+  PSOL: {
+    nome: "PSOL",
+    numero: 50,
+    cor: "#ff4444",
+    tendencia: "Esquerda",
+    tendenciaPct: 10,
+  },
+  PSTU: {
+    nome: "PSTU",
+    numero: 16,
+    cor: "#ff0000",
+    tendencia: "Esquerda Radical",
+    tendenciaPct: 5,
+  },
+  PT: {
+    nome: "Partido dos Trabalhadores",
+    numero: 13,
+    cor: "#ff4444",
+    tendencia: "Esquerda",
+    tendenciaPct: 20,
+  },
+  PV: {
+    nome: "Partido Verde",
+    numero: 43,
+    cor: "#f97316",
+    tendencia: "Centro-Esquerda",
+    tendenciaPct: 35,
+  },
+  REDE: {
+    nome: "Rede",
+    numero: 18,
+    cor: "#f97316",
+    tendencia: "Centro-Esquerda",
+    tendenciaPct: 35,
+  },
+  REPUBLICANOS: {
+    nome: "Republicanos",
+    numero: 10,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 58,
+  },
+  SOLIDARIEDADE: {
+    nome: "Solidariedade",
+    numero: 77,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  UCDB: {
+    nome: "UCDB",
+    numero: 0,
+    cor: "#eab308",
+    tendencia: "Centro",
+    tendenciaPct: 50,
+  },
+  UNIAO: {
+    nome: "Uniao Brasil",
+    numero: 44,
+    cor: "#22c55e",
+    tendencia: "Centro-Direita",
+    tendenciaPct: 58,
+  },
+  UP: {
+    nome: "UP",
+    numero: 80,
+    cor: "#ff4444",
+    tendencia: "Esquerda",
+    tendenciaPct: 10,
+  },
 };
 
 function getTendency(partido) {
-  return (
-    PARTY_TENDENCY[(partido || "").toUpperCase().trim()] || {
-      tendencia: "",
-      cor: "#888",
-      pct: 50,
-    }
-  );
+  const norm = (partido || "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toUpperCase()
+    .trim();
+  const p = PARTIES[norm] || {};
+  return {
+    tendencia: p.tendencia || "",
+    cor: p.cor || "#888",
+    pct: p.tendenciaPct || 50,
+  };
 }
 
 const regionMap = {
@@ -552,8 +735,7 @@ const normalizeSigla = (s) =>
     .toUpperCase();
 for (const sigla of [...allParties].sort()) {
   const norm = normalizeSigla(sigla);
-  const info = PARTY_INFO[norm] ||
-    PARTY_INFO[sigla] || { nome: sigla, numero: 0, cor: "#888" };
+  const info = PARTIES[norm] || { nome: sigla, numero: 0, cor: "#888" };
   const logoName = norm === "PCDOB" ? "PCB" : norm === "UNIAO" ? "UNIAO" : norm;
   // original sigla entry
   pl += "  " + sigla + ": {\n";

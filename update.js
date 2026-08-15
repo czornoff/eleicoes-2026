@@ -167,7 +167,7 @@ function convertToUtf8(src, dest) {
 }
 
 async function getCkamUrls() {
-  console.log("[1/6] Obtendo URLs do CKAN...");
+  console.log("[1/7] Obtendo URLs do CKAN...");
   try {
     const resp = await fetchJson(CKAN_API);
     const resources = resp.result.resources;
@@ -198,7 +198,7 @@ async function getCkamUrls() {
 }
 
 async function downloadCsv(urls) {
-  console.log("[2/6] Baixando CSV de candidatos...");
+  console.log("[2/7] Baixando CSV de candidatos...");
   ensureDir(dataDir);
   if (!urls.csv) {
     console.log("  URL do CSV nao encontrada");
@@ -228,7 +228,7 @@ async function downloadCsv(urls) {
 
 async function downloadFotos(urls) {
   ensureDir(fotoDir);
-  console.log("[3/6] Baixando fotos...");
+  console.log("[3/7] Baixando fotos...");
 
   const fotoKeys = Object.keys(urls).filter((k) => k.startsWith("foto_"));
   if (fotoKeys.length === 0) {
@@ -269,7 +269,7 @@ async function downloadFotos(urls) {
       process.stdout.write(`\r  ${uf}: ${moved} novas fotos   `);
     } catch (e) {
       totalErros++;
-      process.stdout.write(`\r  ${uf}: ERRO         `);
+      console.log(`\r  ${uf}: ERRO - ${e.message}    `);
     }
     // cleanup zip and temporary folder
     if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
@@ -279,8 +279,101 @@ async function downloadFotos(urls) {
   console.log(`\n  Fotos: ${totalBaixadas} baixadas, ${totalErros} erros`);
 }
 
+function verifyPhotos(apiData) {
+  console.log("\n  Verificando fotos dos candidatos...");
+  const photoFiles = fs.readdirSync(fotoDir).filter((f) => f.endsWith(".jpg"));
+  const missing = [];
+
+  function check(cargoNome, uf, c) {
+    const sq = String(c.id || c.sq || "");
+    const nome = c.nomeUrna || c.nome || "";
+    const hasFoto = photoFiles.some(
+      (f) => f.includes(sq) || f.includes("FBR" + sq),
+    );
+    if (!hasFoto && sq) {
+      missing.push({ uf, cargo: cargoNome, sq, nome });
+    }
+  }
+
+  if (apiData.BR) {
+    for (const [cargo, cands] of Object.entries(apiData.BR)) {
+      if (Array.isArray(cands)) cands.forEach((c) => check(cargo, "BR", c));
+    }
+  }
+  for (const state of STATES) {
+    if (!apiData[state]) continue;
+    for (const [cargo, cands] of Object.entries(apiData[state])) {
+      if (Array.isArray(cands)) cands.forEach((c) => check(cargo, state, c));
+    }
+  }
+
+  if (missing.length > 0) {
+    console.log(`\n  ATENCAO: ${missing.length} candidatos sem foto:`);
+    for (const m of missing) {
+      console.log(`    ${m.uf} - ${m.cargo}: ${m.nome} (SQ: ${m.sq})`);
+    }
+  } else {
+    console.log("  Todos os candidatos possuem foto");
+  }
+  return missing;
+}
+
+async function downloadMissingFotos(apiData) {
+  console.log("\n[5/7] Buscando fotos faltantes na API TSE...");
+  const photoFiles = fs.readdirSync(fotoDir).filter((f) => f.endsWith(".jpg"));
+  let baixadas = 0, erros = 0, jaExistiam = 0, placeholders = 0;
+
+  async function tryDownloadFoto(sq) {
+    if (!sq) return;
+    const hasFoto = photoFiles.some(
+      (f) => f.includes(sq) || f.includes("FBR" + sq),
+    );
+    if (hasFoto) { jaExistiam++; return; }
+
+    const url = `https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/img/${ELEICAO_ID}/${sq}/BR`;
+    const tmpPath = path.join(fotoDir, `_tmp_${sq}.jpg`);
+    const destPath = path.join(fotoDir, `FBR${sq}_div.jpg`);
+    try {
+      await download(url, tmpPath);
+      const size = fs.statSync(tmpPath).size;
+      if (size < 200) {
+        fs.unlinkSync(tmpPath);
+        erros++;
+      } else {
+        fs.renameSync(tmpPath, destPath);
+        photoFiles.push(`FBR${sq}_div.jpg`);
+        baixadas++;
+        process.stdout.write(`\r  SQ ${sq}: foto baixada (${size} bytes)   `);
+      }
+    } catch (e) {
+      if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      erros++;
+    }
+    await sleep(150);
+  }
+
+  const brCandidates = [];
+  if (apiData.BR) {
+    for (const cands of Object.values(apiData.BR)) {
+      if (Array.isArray(cands)) brCandidates.push(...cands);
+    }
+  }
+
+  for (const c of brCandidates) {
+    const sq = String(c.id || c.sq || "");
+    await tryDownloadFoto(sq);
+    if (c.vices && Array.isArray(c.vices)) {
+      for (const v of c.vices) {
+        await tryDownloadFoto(String(v.id || v.sq || ""));
+      }
+    }
+  }
+
+  console.log(`\n  Fotos faltantes: ${baixadas} baixadas, ${jaExistiam} ja existiam, ${erros} indisponiveis`);
+}
+
 async function fetchTseApiData() {
-  console.log("[4/6] Buscando dados da API TSE...");
+  console.log("[4/7] Buscando dados da API TSE...");
   const apiData = {};
 
   apiData.BR = {};
@@ -326,7 +419,7 @@ async function fetchTseApiData() {
 }
 
 function mergeAndGenerate(apiData) {
-  console.log("[5/6] Gerando candidatos.js e partidos_logos.js...");
+  console.log("[6/7] Gerando candidatos.js e partidos_logos.js...");
   execSync("node generate_candidatos.js", {
     cwd: __dirname,
     stdio: "inherit",
@@ -335,7 +428,7 @@ function mergeAndGenerate(apiData) {
 }
 
 function cleanup() {
-  console.log("[6/6] Limpando arquivos temporarios...");
+  console.log("[7/7] Limpando arquivos temporarios...");
   removeDir(dataDir);
   console.log("  data_tmp removido");
 }
@@ -353,6 +446,8 @@ async function main() {
   await downloadCsv(urls);
   await downloadFotos(urls);
   const apiData = await fetchTseApiData();
+  await downloadMissingFotos(apiData);
+  verifyPhotos(apiData);
   mergeAndGenerate(apiData);
   cleanup();
 

@@ -76,6 +76,12 @@ const PARTIDOS_LOGOS = {
     cor: "#ff4444",
     numero: 65,
   },
+  PCO: {
+    nome: "PCO",
+    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/PCO.jpg",
+    cor: "#ff0000",
+    numero: 29,
+  },
   PDT: {
     nome: "PDT",
     logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/PDT.jpg",
@@ -139,7 +145,7 @@ const PARTIDOS_LOGOS = {
   PSTU: {
     nome: "PSTU",
     logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/PSTU.jpg",
-    cor: "#FF0000",
+    cor: "#ff0000",
     numero: 16,
   },
   PT: {

@@ -1,4 +1,4 @@
-const TOTAL_QUESTIONS = 15;
+const TOTAL_QUESTIONS = 3;
 
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".totalQuestions").forEach((span) => {
