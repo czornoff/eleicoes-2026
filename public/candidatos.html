@@ -219,6 +219,28 @@
     </div>
   </div>
 
+  <!-- Modal Partido -->
+  <div id="partidoModal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" onclick="fecharPartidoModal()"></div>
+    <div class="absolute inset-4 md:inset-10 lg:inset-16 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-4">
+          <div id="partidoModalLogo"></div>
+          <div>
+            <h3 id="partidoModalNome" class="text-xl font-bold"></h3>
+            <p id="partidoModalInfo" class="text-sm text-gray-500 dark:text-gray-400"></p>
+          </div>
+        </div>
+        <button onclick="fecharPartidoModal()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition flex-shrink-0">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto p-4 md:p-6">
+        <div id="partidoModalConteudo"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="text-center py-8 text-sm text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 mt-8">
     <p>Dados retirados do <a href="https://dadosabertos.tse.jus.br/" target="_blank" rel="noopener" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-600">Portal de Dados Abertos do TSE</a> em agosto de 2026</p>
@@ -959,8 +981,6 @@
       document.body.style.overflow = '';
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
-
     // ============ PARTIDOS ============
     let partidosOrdenacao = 'total';
     function renderPartidos() {
@@ -1009,7 +1029,7 @@
         const tendenciaPct = typeof getPartidoTendenciaPct === 'function' ? getPartidoTendenciaPct(p.nome) : 50;
 
         return `
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover flex flex-col justify-between">
+          <div onclick="abrirPartidoModal('${_normSigla(p.nome)}')" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-100 dark:border-gray-700 card-hover flex flex-col justify-between cursor-pointer">
             <div>
               <div class="flex items-center gap-3">
                 ${logo ? `<img src="${logo}" alt="${p.nome}" class="h-10 w-auto rounded" onerror="this.style.display='none'">` : `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xs" style="background:${cor}">${p.nome.substring(0,4)}</div>`}
@@ -1021,19 +1041,16 @@
                   ${nomeCompleto && nomeCompleto !== p.nome ? `<p class="text-xs text-gray-500 dark:text-gray-400 truncate">${nomeCompleto}</p>` : ''}
                 </div>
               </div>
+              ${tendencia ? `
               <div class="mt-3">
-                ${tendencia ? `
-                <div class="flex items-center gap-2 mb-3">
-                  <span class="text-xs text-gray-500 dark:text-gray-400">Espectro:</span>
-                  <div class="spectrum flex-1 h-2 rounded-full relative max-w-xs">
-                    <div class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${tendenciaCor}"></div>
-                  </div>
-                  <span class="text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap" style="background:${tendenciaCor}20;color:${tendenciaCor}">${tendencia}</span>
+                <span class="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mb-2" style="background:${tendenciaCor}20;color:${tendenciaCor}">${tendencia}</span>
+                <div class="spectrum w-full h-2 rounded-full relative">
+                  <div class="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 rounded-full shadow" style="left:${tendenciaPct}%;border-color:${tendenciaCor}"></div>
                 </div>
-                ` : ''}
               </div>
+              ` : ''}
             </div>
-            <div class="mt-2">
+            <div class="mt-3">
               <div class="flex items-center justify-between mb-1">
                 <span class="text-xs text-gray-500">${p.total} candidatos</span>
               </div>
@@ -1049,6 +1066,224 @@
       document.getElementById('listaPartidos').innerHTML = cards;
       atualizarContagens();
     }
+
+    // ============ MODAL PARTIDO ============
+    let _partidoModalSigla = '';
+    let _partidoModalCandidatos = [];
+
+    function _partidoMatches(c) {
+      return _normSigla(c.partido) === _partidoModalSigla;
+    }
+
+    function abrirPartidoModal(sigla) {
+      const partido = PARTIDOS_LOGOS[sigla];
+      if (!partido) return;
+      _partidoModalSigla = sigla;
+
+      const logo = partido.logo || '';
+      const nome = partido.nome || sigla;
+      const numero = partido.numero || '';
+      const cor = partido.cor || '#888';
+      const tendencia = partido.tendencia || '';
+
+      document.getElementById('partidoModalLogo').innerHTML = logo
+        ? `<img src="${logo}" alt="${sigla}" class="h-12 w-auto rounded" onerror="this.style.display='none'">`
+        : `<div class="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold" style="background:${cor}">${sigla.substring(0,4)}</div>`;
+      document.getElementById('partidoModalNome').textContent = `${sigla} - ${nome}`;
+      document.getElementById('partidoModalInfo').innerHTML = `Nº ${numero} &middot; ${tendencia}${tendencia ? ' <span style="color:'+cor+'">&bull;</span>' : ''} &middot; <span id="partidoModalTotal"></span>`;
+
+      _partidoModalCandidatos = [];
+
+      CANDIDATOS_PRESIDENTE.filter(_partidoMatches).forEach(c => {
+        _partidoModalCandidatos.push({ ...c, _estado: 'BR', _tipo: 'Presidente' });
+      });
+
+      for (const st of ESTADOS) {
+        (GOVERNADORES_POR_ESTADO[st] || []).filter(_partidoMatches).forEach(c => {
+          _partidoModalCandidatos.push({ ...c, _estado: st, _tipo: 'Governador' });
+        });
+        (SENADORES_POR_ESTADO[st] || []).filter(_partidoMatches).forEach(c => {
+          _partidoModalCandidatos.push({ ...c, _estado: st, _tipo: 'Senador' });
+        });
+        (DEPUTADOS_FEDERAIS_DESTAQUE[st] || []).filter(_partidoMatches).forEach(c => {
+          _partidoModalCandidatos.push({ ...c, _estado: st, _tipo: 'Deputado Federal' });
+        });
+        (DEPUTADOS_ESTADUAIS_DESTAQUE[st] || []).filter(_partidoMatches).forEach(c => {
+          _partidoModalCandidatos.push({ ...c, _estado: st, _tipo: 'Deputado Estadual' });
+        });
+      }
+
+      const estadosUsados = [...new Set(_partidoModalCandidatos.filter(c => c._tipo !== 'Presidente').map(c => c._estado))].sort();
+
+      let botoesHtml = `<div class="flex flex-wrap gap-1.5 mb-5" id="partidoModalBotoes">`;
+      botoesHtml += `<button onclick="partidoModalEstado='todos';_atualizarBtnEstado(this)" data-uf="todos" class="estado-btn px-3 py-1.5 rounded-full text-xs font-medium bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300 ring-2 ring-primary-500 transition">Todos</button>`;
+      estadosUsados.forEach(uf => {
+        botoesHtml += `<button onclick="partidoModalEstado='${uf}';_atualizarBtnEstado(this)" data-uf="${uf}" class="estado-btn px-3 py-1.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 transition hover:bg-gray-300 dark:hover:bg-gray-600">${uf}</button>`;
+      });
+      botoesHtml += `</div>`;
+
+      document.getElementById('partidoModalConteudo').innerHTML = botoesHtml + '<div id="partidoModalBody"></div>';
+      document.getElementById('partidoModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      renderPartidoModalConteudo();
+    }
+
+    let partidoModalEstado = 'todos';
+
+    function _atualizarBtnEstado(btn) {
+      document.querySelectorAll('#partidoModalBotoes .estado-btn').forEach(b => {
+        b.classList.remove('bg-primary-100','text-primary-700','dark:bg-primary-900/50','dark:text-primary-300','ring-2','ring-primary-500');
+        b.classList.add('bg-gray-200','dark:bg-gray-700','text-gray-600','dark:text-gray-400');
+      });
+      btn.classList.remove('bg-gray-200','dark:bg-gray-700','text-gray-600','dark:text-gray-400');
+      btn.classList.add('bg-primary-100','text-primary-700','dark:bg-primary-900/50','dark:text-primary-300','ring-2','ring-primary-500');
+      renderPartidoModalConteudo();
+    }
+
+    function renderPartidoModalConteudo() {
+      const estadoFiltro = partidoModalEstado;
+      const cor = PARTIDOS_LOGOS[_partidoModalSigla]?.cor || '#888';
+      const tipoOrdem = ['Governador','Senador','Deputado Federal','Deputado Estadual'];
+
+      const presidente = _partidoModalCandidatos.filter(c => c._tipo === 'Presidente');
+      let outros = _partidoModalCandidatos.filter(c => c._tipo !== 'Presidente');
+      if (estadoFiltro !== 'todos') {
+        outros = outros.filter(c => c._estado === estadoFiltro);
+      }
+
+      const groups = {};
+      outros.forEach(c => {
+        const key = c._tipo;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(c);
+      });
+
+      let totalCount = presidente.length + outros.length;
+      let html = '';
+
+      if (presidente.length > 0) {
+        html += `<div class="mb-6 p-4 rounded-2xl border-2 border-dashed" style="border-color:${cor}40;background:${cor}08">`;
+        html += `<h4 class="text-sm font-bold uppercase tracking-wide mb-3 flex items-center gap-2" style="color:${cor}">`;
+        html += `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+        html += `Presidente</h4>`;
+        html += `<div class="grid gap-3">`;
+
+        presidente.forEach(c => {
+          const fotoUrl = c.foto || '';
+          const fotoHtml = fotoUrl
+            ? `<img src="${fotoUrl}" alt="${c.nomeUrna}" class="w-14 h-14 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-14 h-14 rounded-full items-center justify-center text-white font-bold text-sm border-2 flex-shrink-0 hidden" style="background:${cor}">${c.nomeUrna.substring(0,2)}</div>`
+            : `<div class="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${cor}">${c.nomeUrna.substring(0,2)}</div>`;
+          const numeroHtml = c.numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
+          const link = c.linkPlano || '#';
+          const viceHtml = c.vice ? `<span class="text-xs text-gray-400 dark:text-gray-500 ml-2">Vice: ${c.vice}</span>` : '';
+
+          html += `
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              ${fotoHtml}
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-semibold text-sm truncate">${c.nomeUrna}</span>
+                  ${numeroHtml}
+                  ${viceHtml}
+                </div>
+                <span class="text-xs text-gray-500 dark:text-gray-400 truncate block">${c.nome}</span>
+              </div>
+              <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Ver no TSE</a>
+            </div>`;
+        });
+
+        html += `</div></div>`;
+      }
+
+      for (const tipo of tipoOrdem) {
+        const candidatos = groups[tipo];
+        if (!candidatos || candidatos.length === 0) continue;
+
+        html += `<div class="mb-6">`;
+        html += `<h4 class="text-sm font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-2">`;
+        html += `<span class="w-1 h-4 rounded-full" style="background:${cor}"></span>`;
+        html += `${tipo}`;
+        if (estadoFiltro === 'todos') {
+          const estadosNoTipo = [...new Set(candidatos.map(c => c._estado))].sort();
+          if (estadosNoTipo.length <= 3) {
+            html += ` <span class="font-normal text-gray-400">&mdash; ${estadosNoTipo.map(e => NOMES_ESTADOS[e]||e).join(', ')}</span>`;
+          } else {
+            html += ` <span class="font-normal text-gray-400">&mdash; ${estadosNoTipo.length} estados</span>`;
+          }
+        }
+        html += ` <span class="ml-auto text-xs font-normal px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500">${candidatos.length}</span>`;
+        html += `</h4>`;
+
+        if (estadoFiltro !== 'todos') {
+          candidatos.sort((a, b) => a.nome.localeCompare(b.nome));
+          html += `<div class="grid gap-3">`;
+          candidatos.forEach(c => {
+            html += _partidoModalCard(c, cor);
+          });
+          html += `</div>`;
+        } else {
+          const porEstado = {};
+          candidatos.forEach(c => {
+            if (!porEstado[c._estado]) porEstado[c._estado] = [];
+            porEstado[c._estado].push(c);
+          });
+
+          const sortedEstados = Object.keys(porEstado).sort();
+          for (const uf of sortedEstados) {
+            if (porEstado[uf].length <= 3) {
+              html += `<div class="ml-3 mb-3"><span class="text-xs text-gray-400 font-medium">${NOMES_ESTADOS[uf]||uf} (${uf})</span><div class="grid gap-2 mt-1">`;
+            } else {
+              html += `<details class="ml-3 mb-3"><summary class="text-xs text-gray-400 font-medium cursor-pointer hover:text-gray-600 dark:hover:text-gray-300">${NOMES_ESTADOS[uf]||uf} (${uf}) — ${porEstado[uf].length}</summary><div class="grid gap-2 mt-1">`;
+            }
+            porEstado[uf].forEach(c => { html += _partidoModalCard(c, cor); });
+            html += `</div>`;
+            if (porEstado[uf].length > 3) html += `</details>`;
+            else html += `</div>`;
+          }
+        }
+
+        html += `</div>`;
+      }
+
+      if (totalCount === 0) {
+        html += '<p class="text-center text-gray-400 py-8">Nenhum candidato encontrado.</p>';
+      }
+
+      document.getElementById('partidoModalTotal').textContent = `${totalCount} candidato${totalCount !== 1 ? 's' : ''}`;
+      const body = document.getElementById('partidoModalBody');
+      if (body) body.innerHTML = html;
+    }
+
+    function _partidoModalCard(c, cor) {
+      const fotoUrl = c.foto || '';
+      const fotoHtml = fotoUrl
+        ? `<img src="${fotoUrl}" alt="${c.nomeUrna}" class="w-11 h-11 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-11 h-11 rounded-full items-center justify-center text-white font-bold text-xs border-2 flex-shrink-0 hidden" style="background:${cor}">${c.nomeUrna.substring(0,2)}</div>`
+        : `<div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0" style="background:${cor}">${c.nomeUrna.substring(0,2)}</div>`;
+      const numeroHtml = c.numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
+      const link = c.linkPlano || '#';
+      const ufTag = c._tipo !== 'Presidente' ? `<span class="text-[10px] px-1 py-0.5 rounded bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 ml-1">${c._estado}</span>` : '';
+
+      return `
+        <div class="flex items-center gap-3 p-2.5 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+          ${fotoHtml}
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1">
+              <span class="font-semibold text-sm truncate">${c.nomeUrna}</span>
+              ${numeroHtml}
+              ${ufTag}
+            </div>
+            <span class="text-xs text-gray-500 dark:text-gray-400 truncate block">${c.nome}</span>
+          </div>
+          <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Ver no TSE</a>
+        </div>`;
+    }
+
+    function fecharPartidoModal() {
+      document.getElementById('partidoModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { fecharModal(); fecharPartidoModal(); } });
 
     // ============ INIT ============
     initEstados();

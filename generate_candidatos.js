@@ -735,7 +735,7 @@ const normalizeSigla = (s) =>
     .toUpperCase();
 for (const sigla of [...allParties].sort()) {
   const norm = normalizeSigla(sigla);
-  const info = PARTIES[norm] || { nome: sigla, numero: 0, cor: "#888" };
+  const info = PARTIES[norm] || { nome: sigla, numero: 0, cor: "#888", tendencia: "", tendenciaPct: 50 };
   const logoName = norm === "PCDOB" ? "PCB" : norm === "UNIAO" ? "UNIAO" : norm;
   // original sigla entry
   pl += "  " + sigla + ": {\n";
@@ -746,6 +746,8 @@ for (const sigla of [...allParties].sort()) {
     '.jpg",\n';
   pl += '    cor: "' + info.cor + '",\n';
   pl += "    numero: " + info.numero + ",\n";
+  pl += '    tendencia: "' + (info.tendencia || "") + '",\n';
+  pl += "    tendenciaPct: " + (info.tendenciaPct || 50) + ",\n";
   pl += "  },\n";
   // alias entry for normalized key if different
   if (norm !== sigla) {
@@ -757,6 +759,8 @@ for (const sigla of [...allParties].sort()) {
       '.jpg",\n';
     pl += '    cor: "' + info.cor + '",\n';
     pl += "    numero: " + info.numero + ",\n";
+    pl += '    tendencia: "' + (info.tendencia || "") + '",\n';
+    pl += "    tendenciaPct: " + (info.tendenciaPct || 50) + ",\n";
     pl += "  },\n";
   }
 }
@@ -765,6 +769,9 @@ pl += `function getPartidoLogo(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUppe
 function getPartidoCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
 function getPartidoNumero(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.numero || 0; }
 function getPartidoNome(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.nome || sigla; }
+function getPartidoTendencia(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendencia || ""; }
+function getPartidoTendenciaCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
+function getPartidoTendenciaPct(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendenciaPct || 50; }
 `;
 
 fs.writeFileSync(path.join(jsDir, "partidos_logos.js"), pl, "utf-8");
