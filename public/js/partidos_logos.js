@@ -262,10 +262,11 @@ const PARTIDOS_LOGOS = {
   },
 };
 
-function getPartidoLogo(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.logo || ""; }
-function getPartidoCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
-function getPartidoNumero(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.numero || 0; }
-function getPartidoNome(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.nome || sigla; }
-function getPartidoTendencia(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendencia || ""; }
-function getPartidoTendenciaCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
-function getPartidoTendenciaPct(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendenciaPct || 50; }
+function _normSigla(s) { return (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim(); }
+function getPartidoLogo(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.logo || ""; }
+function getPartidoCor(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.cor || "#888"; }
+function getPartidoNumero(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.numero || 0; }
+function getPartidoNome(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.nome || sigla; }
+function getPartidoTendencia(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.tendencia || ""; }
+function getPartidoTendenciaCor(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.cor || "#888"; }
+function getPartidoTendenciaPct(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.tendenciaPct || 50; }
