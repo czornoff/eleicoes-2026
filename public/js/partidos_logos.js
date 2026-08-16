@@ -44,14 +44,6 @@ const PARTIDOS_LOGOS = {
     tendencia: "Centro",
     tendenciaPct: 50,
   },
-  INTERSINDICAL: {
-    nome: "Intersindical",
-    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/INTERSINDICAL.jpg",
-    cor: "#ff4444",
-    numero: 0,
-    tendencia: "Esquerda",
-    tendenciaPct: 15,
-  },
   MDB: {
     nome: "MDB",
     logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/MDB.jpg",
@@ -59,6 +51,14 @@ const PARTIDOS_LOGOS = {
     numero: 15,
     tendencia: "Centro",
     tendenciaPct: 48,
+  },
+  MISSÃO: {
+    nome: "Missao",
+    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/MISSAO.jpg",
+    cor: "#eab308",
+    numero: 14,
+    tendencia: "Centro-Liberal",
+    tendenciaPct: 50,
   },
   MISSAO: {
     nome: "Missao",
@@ -82,14 +82,6 @@ const PARTIDOS_LOGOS = {
     cor: "#0055ff",
     numero: 30,
     tendencia: "Direita Liberal",
-    tendenciaPct: 70,
-  },
-  PATRIOTA: {
-    nome: "Patriota",
-    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/PATRIOTA.jpg",
-    cor: "#3b82f6",
-    numero: 0,
-    tendencia: "Direita",
     tendenciaPct: 70,
   },
   PCB: {
@@ -122,7 +114,7 @@ const PARTIDOS_LOGOS = {
     cor: "#f97316",
     numero: 12,
     tendencia: "Centro-Esquerda",
-    tendenciaPct: 35,
+    tendenciaPct: 38,
   },
   PL: {
     nome: "Partido Liberal",
@@ -138,7 +130,7 @@ const PARTIDOS_LOGOS = {
     cor: "#22c55e",
     numero: 20,
     tendencia: "Centro-Direita",
-    tendenciaPct: 58,
+    tendenciaPct: 60,
   },
   PP: {
     nome: "Progressistas",
@@ -154,7 +146,7 @@ const PARTIDOS_LOGOS = {
     cor: "#22c55e",
     numero: 25,
     tendencia: "Centro-Direita",
-    tendenciaPct: 55,
+    tendenciaPct: 60,
   },
   PRTB: {
     nome: "PRTB",
@@ -162,7 +154,7 @@ const PARTIDOS_LOGOS = {
     cor: "#0055ff",
     numero: 28,
     tendencia: "Direita",
-    tendenciaPct: 70,
+    tendenciaPct: 72,
   },
   PSB: {
     nome: "PSB",
@@ -244,6 +236,14 @@ const PARTIDOS_LOGOS = {
     tendencia: "Centro",
     tendenciaPct: 50,
   },
+  UNIÃO: {
+    nome: "Uniao Brasil",
+    logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/UNIAO.jpg",
+    cor: "#22c55e",
+    numero: 44,
+    tendencia: "Centro-Direita",
+    tendenciaPct: 58,
+  },
   UNIAO: {
     nome: "Uniao Brasil",
     logo: "https://divulgacandcontas.tse.jus.br/divulga/assets/images/partidos/UNIAO.jpg",
@@ -262,11 +262,10 @@ const PARTIDOS_LOGOS = {
   },
 };
 
-function _normSigla(s) { return (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim(); }
-function getPartidoLogo(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.logo || ""; }
-function getPartidoCor(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.cor || "#888"; }
-function getPartidoNumero(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.numero || 0; }
-function getPartidoNome(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.nome || sigla; }
-function getPartidoTendencia(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.tendencia || ""; }
-function getPartidoTendenciaCor(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.cor || "#888"; }
-function getPartidoTendenciaPct(sigla) { return PARTIDOS_LOGOS[_normSigla(sigla)]?.tendenciaPct || 50; }
+function getPartidoLogo(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.logo || ""; }
+function getPartidoCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
+function getPartidoNumero(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.numero || 0; }
+function getPartidoNome(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.nome || sigla; }
+function getPartidoTendencia(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendencia || ""; }
+function getPartidoTendenciaCor(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.cor || "#888"; }
+function getPartidoTendenciaPct(sigla) { return PARTIDOS_LOGOS[(sigla||"").toUpperCase().trim()]?.tendenciaPct || 50; }
