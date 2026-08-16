@@ -462,7 +462,7 @@
           ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-20 h-20 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-20 h-20 rounded-full items-center justify-center text-white font-bold text-xl border-3 flex-shrink-0 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`
           : `<div class="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-xl border-3 flex-shrink-0" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
         const numeroHtml = c.numero ? `<span class="text-sm font-mono px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
-        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/BR/BR/20322002026/${c.sqCandidato}/2026/BR" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/BR/BR/20322002026/${c.sqCandidato}/2026/BR" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>` : '');
         const viceFotoUrl = c.viceFoto || '';
         const viceFotoHtml = viceFotoUrl
           ? `<img src="${viceFotoUrl}" alt="${c.vice}" class="w-10 h-10 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${c.tendenciaCor}" onerror="this.style.display='none'">`
@@ -503,7 +503,7 @@
                       Ver Plano
                     </button>
                   ` : ''}
-                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>
                   ${c.coligacao ? `<div class="w-full mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
                 </div>
               </div>
@@ -558,7 +558,7 @@
           ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-14 h-14 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-14 h-14 rounded-full items-center justify-center text-white font-bold text-sm border-2 flex-shrink-0 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`
           : `<div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:${cor}">${c.partido.substring(0,4)}</div>`;
         const numeroHtml = c.numero ? `<span class="text-xs font-mono px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">${c.numero}</span>` : '';
-        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>` : '');
         const viceFotoUrl = c.viceFoto || '';
         const viceFotoHtml = viceFotoUrl
           ? `<img src="${viceFotoUrl}" alt="${c.vice}" class="w-8 h-8 rounded-full object-cover border-2 flex-shrink-0" style="border-color:${cor}" onerror="this.style.display='none'">`
@@ -603,7 +603,7 @@
                       </button>
                     ` : ''}
                     
-                    <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                    <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>
                     ${c.coligacao ? `<div class="w-full mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
                   </div>
                 </div>
@@ -658,7 +658,7 @@
         const corTendencia = tendenciaPct < 30 ? '#ff4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
         const fotoUrl = c.foto || '';
         const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-12 h-12 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-12 h-12 rounded-full items-center justify-center text-white font-bold text-sm border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm border-2" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
-        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '');
+        const linkTSE = c.linkPlano || (c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/${estadoAtual}/20322002026/${c.sqCandidato}/2026/${estadoAtual}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>` : '');
         const suplentes = [c.suplente1, c.suplente2].filter(Boolean);
         const suplenteHtml = suplentes.length > 0 ? `<p class="text-xs text-gray-500 dark:text-gray-400 mt-2"><span class="font-medium">Suplentes:</span> ${suplentes.join(', ')}</p>` : '';
         const partidoLogo = getPartidoLogo(c.partido);
@@ -703,7 +703,7 @@
                   </div>
                 ` : ''}
                 <div class="mt-1">
-                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>
+                  <a href="${linkTSE}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>
                   ${c.coligacao ? `<div class="mt-1"><span class="text-xs font-bold italic text-gray-600 dark:text-gray-300">${c.coligacao}:</span> <span class="text-xs text-gray-500 dark:text-gray-400">${c.composicaoColigacao}</span></div>` : ''}
                 </div>
               </div>
@@ -765,7 +765,7 @@
         const corTendencia = tendenciaPct < 30 ? '#ff4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
         const fotoUrl = c.foto || '';
         const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-10 h-10 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-10 h-10 rounded-full items-center justify-center text-white font-bold text-xs border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs border-2" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>`;
-        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '';
+        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>` : '';
         const partidoLogo = getPartidoLogo(c.partido);
         const partidoNome = getPartidoNome(c.partido);
         const partidoHtml = partidoLogo
@@ -866,7 +866,7 @@
         const corTendencia = tendenciaPct < 30 ? '#ff4444' : tendenciaPct < 50 ? '#eab308' : '#3b82f6';
         const fotoUrl = c.foto || '';
         const fotoHtml = fotoUrl ? `<img src="${fotoUrl}" alt="${c.nome}" class="w-10 h-10 rounded-full object-cover border-2" style="border-color:${cor}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="w-10 h-10 rounded-full items-center justify-center text-white font-bold text-xs border-2 hidden" style="background:${cor};border-color:${cor}">${c.nome.split(' ').map(n=>n[0]).join('').substring(0,2)}</div>` : `<div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xs" style="background:${cor}">${c.partido.substring(0,4)}</div>`;
-        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>` : '';
+        const linkTSE = c.sqCandidato ? `<a href="https://divulgacandcontas.tse.jus.br/divulga/#/candidato/2045202026/7925662/${c.sqCandidato}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>` : '';
         const partidoLogo = getPartidoLogo(c.partido);
         const partidoNome = getPartidoNome(c.partido);
         const partidoHtml = partidoLogo
@@ -1191,7 +1191,7 @@
                 </div>
                 <span class="text-xs text-gray-500 dark:text-gray-400 truncate block">${c.nome}</span>
               </div>
-              <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Ver no TSE</a>
+              <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Saiba mais no TSE</a>
             </div>`;
         });
 
@@ -1277,7 +1277,7 @@
             </div>
             <span class="text-xs text-gray-500 dark:text-gray-400 truncate block">${c.nome}</span>
           </div>
-          <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Ver no TSE</a>
+          <a href="${link}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-blue-600 dark:text-blue-400 text-xs hover:underline whitespace-nowrap flex-shrink-0">Saiba mais no TSE</a>
         </div>`;
     }
 

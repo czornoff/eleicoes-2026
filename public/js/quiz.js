@@ -1130,7 +1130,7 @@ function renderCandidateCard(c, cor) {
         : "text-gray-500 dark:text-gray-400";
 
   const linkTSE = c.linkPlano
-    ? `<a href="${c.linkPlano}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Ver no TSE</a>`
+    ? `<a href="${c.linkPlano}" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 text-xs hover:underline">Saiba mais no TSE</a>`
     : "";
   const fotoUrl = c.foto || "";
   const fotoHtml = fotoUrl
