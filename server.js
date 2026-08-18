@@ -1,4 +1,5 @@
 const express = require("express");
+const compression = require("compression");
 const path = require("path");
 const { spawn } = require("child_process");
 
@@ -9,7 +10,8 @@ const SENHA_ATUALIZAR = "tseAtualizar";
 let atualizacaoEmAndamento = false;
 let logsAtualizacao = [];
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(compression());
+app.use(express.static(path.join(__dirname, "public"), { maxAge: "1d" }));
 
 app.use(express.json());
 
